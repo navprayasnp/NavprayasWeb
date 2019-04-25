@@ -22,7 +22,7 @@ Look up installation instructions [here](https://git-scm.com/downloads)
 2. Clone the repo from **your** account.
 3. Configure local copy to use another remote repo.
     - In the project repo execute: `git remote -v`. This will show a list of urls and remote name. Make sure it's **your** account's url.
-    - Add another one: `git remote add upstream https://github.com/gautamrajnitt/np.git`. This is the original repo's url. Verify using `git remote -v`. Now, there will two entries.
+    - Add another one: `git remote add upstream https://github.com/navprayasnp/NavprayasWeb.git`. This is the original repo's url. Verify using `git remote -v`. Now, there will two entries.
 
  ### Submit your changes:
 1. Before making any changes, create a new branch: `git branch <branch_name>`. Then move into that branch: `git checkout <branch_name>`. Most of the time these two steps can be combined into one: `git checkout -b <branch_name>`.
