@@ -99,7 +99,8 @@ Read about Poetry [here](https://poetry.eustace.io/docs/)
  Install the `1.0.0a2` version.
 
  1. Get the installer.
-    - On Unix systems execute: `curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py`
+    - On Unix systems execute: `curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py` 
+    *(worked for me)*
     - On Windows download the installer from: `https://github.com/sdispater/poetry/blob/master/get-poetry.py`
 
  2. Execute the command: `python get-poetry.py --version 1.0.0a2`
@@ -113,7 +114,7 @@ Read about Poetry [here](https://poetry.eustace.io/docs/)
 Execute `poetry install` in the project's root folder.
 
  ### Activate virtualenv:
-Execute `source .venv/bin/activate` (on unix systems) or `.venv\bin\activate.exe` (on windows). (Look up command for windows if this doesn't work)
+Execute `source .venv/bin/activate` (on unix systems) or `source .venv/Scripts/activate` (on windows). (Look up command for windows if this doesn't work)
 
 
  Add your name and email (as configured in git) in `pyprojects.toml` file. You are now ready to work
