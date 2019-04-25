@@ -1,8 +1,6 @@
 # NavprayasWeb
 Official Website for Navprayas
 
-# Navprayas Website
-
  ## Contributing
 
  ### Git
