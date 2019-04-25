@@ -1,11 +1,13 @@
 [tool.poetry]
 name = "navprayasweb"
 version = "0.1.0"
-description = ""
+description = "A website for Navprayas"
 authors = ["Ambuj Kumar <itsambuja@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
+django-crispy-forms = "^1.7"
+django = "^2.2"
 
 [tool.poetry.dev-dependencies]
 

@@ -1,0 +1,27 @@
+{% extends 'navprayas/base.html' %}
+{% block title %}MTSE registration{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+{% block content %}
+
+      <section class="section-gap achivement-area">
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-lg-10">
+                <div class="achivement-content">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{form|crispy}}
+                        <button class="btn btn-danger" type="submit">Submit</button>
+                      </form> 
+                </div>
+              </div>
+    
+            </div>
+          </div>
+        </section>
+        <!-- End Banner Area -->
+{% endblock  %}

@@ -1,0 +1,40 @@
+{% extends 'navprayas/base.html' %}
+{% block title %}Navprayas Sign In{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<br><br><br>
+
+
+  {%if user.is_authenticated%}
+    <script>
+      window.location.assign("/");
+    </script>
+  {%endif%}
+
+  <section class="section-gap achivement-area">
+			<div class="container">
+				<div class="row align-items-center">
+					<div class="col-lg-5">
+						<div class="achivement-content">
+							<h2>Log in</h2><hr>
+							<form method="post">
+                  {% csrf_token %}
+                  {{ form|crispy }}
+                  <button class="btn btn-danger" type="submit">Login</button>
+              </form>
+              <hr/>
+                <small>Don't Have an Account !!</small> <a href={% url 'signup' %} style="color:red">Sign Up</a> 
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+
+{% endblock  %}
+
+<!-- If u dont want footer and contact no need to write these lines below -->
+{% block contact %}{% endblock %}
+{% block footer %}{% endblock %}
