@@ -28,43 +28,7 @@ def notifications(request):
 def team(request):
     return render(request, 'navprayas/home_links/team.html', {})
 
-@csrf_exempt
-def handlerequest(request):
-    # paytm will send you post request here
-    form = request.POST
-    response_dict = {}
-    for i in form.keys():
-        response_dict[i] = form[i]
-        if i == 'CHECKSUMHASH':
-            checksum = form[i]
 
-    verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
-    if verify:
-        if response_dict['RESPCODE'] == '01':
-            print('order successful')
-        else:
-            print('order was not successful because' + response_dict['RESPMSG'])
-    return render(request, 'navprayas/paytm/status.html', {'response': response_dict})
-
-def payment(request):
-    if request.method=="POST":
-        # Request paytm to transfer the amount to your account after payment by user
-        param_dict = {
-
-                'MID': 'iArBym81738942720672',
-                'ORDER_ID': '2',
-                'TXN_AMOUNT': '30',
-                'CUST_ID': 'kena421@gmail.com',
-                'INDUSTRY_TYPE_ID': 'Retail',
-                'WEBSITE': 'WEBSTAGING',
-                'CHANNEL_ID': 'WEB',
-                'CALLBACK_URL':'http://127.0.0.1:8000/handlerequest/',
-
-        }
-        param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
-        return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
-
-    return render(request, 'navprayas/paytm/pay.html')
 
 # *************************
 # signup form
@@ -152,6 +116,7 @@ def profile(request):
 # *************************
 @login_required
 def MTSE_register(request):
+    print(request.user.profile)
     MTSE_filled = MTSE.objects.filter(MTSE_user=request.user).first() #if returns none then u can fill form
     if MTSE_filled is None:
         if request.method == 'POST':
@@ -294,3 +259,40 @@ def chess_register(request):
 
 
 
+@csrf_exempt
+def handlerequest(request):
+    # paytm will send you post request here
+    form = request.POST
+    response_dict = {}
+    for i in form.keys():
+        response_dict[i] = form[i]
+        if i == 'CHECKSUMHASH':
+            checksum = form[i]
+
+    verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
+    if verify:
+        if response_dict['RESPCODE'] == '01':
+            print('order successful')
+        else:
+            print('order was not successful because' + response_dict['RESPMSG'])
+    return render(request, 'navprayas/paytm/status.html', {'response': response_dict})
+
+def payment(request):
+    if request.method=="POST":
+        # Request paytm to transfer the amount to your account after payment by user
+        param_dict = {
+
+                'MID': 'iArBym81738942720672',
+                'ORDER_ID': '2',
+                'TXN_AMOUNT': '30',
+                'CUST_ID': 'kena421@gmail.com',
+                'INDUSTRY_TYPE_ID': 'Retail',
+                'WEBSITE': 'WEBSTAGING',
+                'CHANNEL_ID': 'WEB',
+                'CALLBACK_URL':'http://127.0.0.1:8000/handlerequest/',
+
+        }
+        param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
+        return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+
+    return render(request, 'navprayas/paytm/pay.html')

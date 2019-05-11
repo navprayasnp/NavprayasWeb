@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.forms import *
+from django import forms
 from .models import *
 
 
@@ -8,6 +8,7 @@ from .models import *
 # User Signup Form
 # *************
 class SignUpForm(UserCreationForm):
+    
     class Meta:
         model = User
         fields = ( 'first_name', 'last_name', 'email', 'password1', 'password2',)
@@ -16,7 +17,10 @@ class SignUpForm(UserCreationForm):
 # *************
 # Profile Signup Form
 # *************
-class SignUpFormProfile(ModelForm):
+class SignUpFormProfile(forms.ModelForm):
+    birth_date = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={'placeholder': 'yyyy/mm/dd'}),
+        )
     class Meta:
         model = Profile
         fields = ( 'birth_date', 'gender', )
@@ -26,96 +30,136 @@ class SignUpFormProfile(ModelForm):
 # 
 #  
 
-class UserUpdateForm(ModelForm):
-    email = EmailField()
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
 
     class Meta:
         model = User
         fields = ['username', 'email']
 
 
-class ProfileUpdateForm(ModelForm):
+class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = [
-            'city',
             'mother_name',
+            'father_name',
             'class_study',
-            'school',
-            'board',
             'post_office',
-            'gender',
-            'addess',
-            'landmark',
             'birth_date',
+            'gender',
+            'Home_number',
+            'landmark',
+            'addess',
+            'contact',
+            'post_office',
             'ditrict',
-            'pin',
+            'city',
         ]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # *************
 # Free hand sketching Form
 # *************
-class FHS_form(ModelForm):
+class FHS_form(forms.ModelForm):
     class Meta:
         model = FHS
-        fields = ('category',)
+        fields = (
+            'Full_name',
+            'category',
+            'contact',
+            'addess',
+        )
 
 # *************
 # Rangotsav Form
 # *************
-class rangotsav_form(ModelForm):
+class rangotsav_form(forms.ModelForm):
     class Meta:
         model = rangotsav
-        fields = ('category',)
+        fields = (
+            'category',
+            'Full_name1',
+            'contact_1',
+            'addess1',
+            'Full_name2',
+            'address_2',
+            'contact_2',
+            'Full_name3',
+            'address_3',
+            'contact_3',
+        )
 
 # *************
 # Puzzle Race Form
 # *************
-class PR_form(ModelForm):
+class PR_form(forms.ModelForm):
     class Meta:
         model = PR
-        fields = ('category','candidate_2','address_2','contact_2','candidate_3','address_3','contact_3', )
+        fields = (
+            'category',
+            'Full_name1',
+            'class1',
+            'contact_1',
+            'addess1',
+            'Full_name2',
+            'class2',
+            'address_2',
+            'contact_3',
+            'Full_name3',
+            'class3',
+            'address_3',
+            'contact_3',
+         )
 
 # *************
 # MTSE Form
 # *************
-class MTSE_form(ModelForm):
+class MTSE_form(forms.ModelForm):
     class Meta:
         model = MTSE
-        fields = ('st_class',)
+        fields = (
+            'qpl',
+            'father_name',
+            'mother_name',
+            'st_class',
+            'board',
+            'class_study',
+            'school',
+            'post_office',
+            'birth_date',
+            'gender',
+            'landmark',
+            'addess',
+            'ditrict',
+            'city',
+            'pin',
+            'Home_number',
+        )
 
 # *************
 # Story and Poem Writing Form
 # *************
-class SPR_form(ModelForm):
+class SPR_form(forms.ModelForm):
     class Meta:
         model = SPR
-        fields = ('category','candidate_2','address_2','contact_2','candidate_3','address_3','contact_3', )
+        fields = (
+            'Full_name',
+            'category',
+            'contact',
+            'addess',
+         )
 # *************
 # Chess Competition Form
 # *************
-class chess_form(ModelForm):
+class chess_form(forms.ModelForm):
     class Meta:
         model = chess
-        fields = ('category',)
+        fields = (
+            'Full_name',
+            'category',
+            'contact',
+            'addess',
+        )
 
 
     
@@ -138,7 +182,7 @@ class chess_form(ModelForm):
    
    
    
-    # class ArticleForm(ModelForm):
+    # class ArticleForm(forms.ModelForm):
     # headline = MyFormField(
     #     max_length=200,
     #     required=False,
