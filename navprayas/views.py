@@ -3,14 +3,21 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login   #as it clashes with other login term
-from .forms import *                                                 #all the components from .form
+from .forms import * #all the components from .form
+import json
+from django.views.decorators.csrf import csrf_exempt
+from navprayas import checksum as Checksum
 
+MERCHANT_KEY = 'WVQB3eC57Bdu3&N_'
 # Create your views here.
 def index(request):
     return render(request, 'navprayas/home_links/index.html', {})
 
 def about(request):
     return render(request, 'navprayas/home_links/about.html', {})
+
+def pay(request):
+    return render(request, 'navprayas/paytm/pay.html', {})
 
 def events(request):
     return render(request, 'navprayas/home_links/events.html', {})
@@ -20,6 +27,44 @@ def notifications(request):
 
 def team(request):
     return render(request, 'navprayas/home_links/team.html', {})
+
+@csrf_exempt
+def handlerequest(request):
+    # paytm will send you post request here
+    form = request.POST
+    response_dict = {}
+    for i in form.keys():
+        response_dict[i] = form[i]
+        if i == 'CHECKSUMHASH':
+            checksum = form[i]
+
+    verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
+    if verify:
+        if response_dict['RESPCODE'] == '01':
+            print('order successful')
+        else:
+            print('order was not successful because' + response_dict['RESPMSG'])
+    return render(request, 'navprayas/paytm/status.html', {'response': response_dict})
+
+def payment(request):
+    if request.method=="POST":
+        # Request paytm to transfer the amount to your account after payment by user
+        param_dict = {
+
+                'MID': 'iArBym81738942720672',
+                'ORDER_ID': '2',
+                'TXN_AMOUNT': '30',
+                'CUST_ID': 'kena421@gmail.com',
+                'INDUSTRY_TYPE_ID': 'Retail',
+                'WEBSITE': 'WEBSTAGING',
+                'CHANNEL_ID': 'WEB',
+                'CALLBACK_URL':'http://127.0.0.1:8000/handlerequest/',
+
+        }
+        param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
+        return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+
+    return render(request, 'navprayas/paytm/pay.html')
 
 # *************************
 # signup form
@@ -33,7 +78,7 @@ def register(request):
         form = SignUpForm(request.POST)
         form2 = SignUpFormProfile(request.POST)
         if form.is_valid() and form2.is_valid:
-            user = form.save()
+            user = form.save(commit = False)
             user.username = user.email  #username and email is same so we are not using username
             user.save()
             a = Profile.objects.filter(user = user).first()
@@ -74,6 +119,17 @@ def profile(request):
     }
 
     return render(request, 'navprayas/users/profile.html', context)
+
+
+# def Mail(request):
+#     if request.method== 'POST':
+#         to = request.POST["to"]
+#         subject = request.POST["subject"]
+#         body = request.POST["body"]
+#         mail(to,subject,body)
+        
+
+#     return render(request, 'navprayas/mail.html', {})
 
 
 

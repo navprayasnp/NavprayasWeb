@@ -118,3 +118,27 @@ Execute `source .venv/bin/activate` (on unix systems) or `source .venv/Scripts/a
 
 
  Add your name and email (as configured in git) in `pyprojects.toml` file. You are now ready to work
+
+
+ pip install oauth2client
+ pip install --upgrade google-api-python-client
+
+
+backports.shutil-get-terminal-size==1.0.0
+decorator==4.0.10
+Django==1.8
+enum34==1.1.6
+ipython-genutils==0.1.0
+pathlib2==2.1.0
+pexpect==4.2.1
+pickleshare==0.7.4
+prompt-toolkit==1.0.9
+ptyprocess==0.5.1
+pycrypto==2.6.1
+Pygments==2.1.3
+simplegeneric==0.8.1
+six==1.10.0
+traitlets==4.3.1
+wcwidth==0.1.7
+
+pip install pycryptodome

@@ -51,4 +51,9 @@ urlpatterns = [
     path('rangotsav_register/', views.rangotsav_register, name='rangotsav_register'),
     path('FHS_register/', views.FHS_register, name='FHS_register'),
     path('chess_register/', views.chess_register, name='chess_register'),
+    # path('mail/', views.Mail, name='mail'),
+    path("payment/", views.payment, name="payment"),
+    path("handlerequest/", views.handlerequest, name="handlerequest"),
+    # path("pay/", views.pay, name="pay"),
+
 ]

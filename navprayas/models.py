@@ -43,6 +43,7 @@ post_save.connect(create_profile,sender=User)
 
 
 class MTSE (models.Model):
+    # application_id = CharField(primary)
     MTSE_user = models.OneToOneField(User, on_delete = models.CASCADE)
     student_class = (
         ('1', '5'),
