@@ -4,19 +4,24 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.core.validators import MaxValueValidator, MinValueValidator
 import datetime
-    
+
+# (datavbase, show onn page)
+
 # NAME	MOTHER'S NAME 	FATHER'S NAME 	CLASS	SCHOOL/COACHING	BOARD	Q.P.L(H/E)	D.O.B	GENDER	ADDRESS	LANDMARK	PO+PS	DISTRICT	PIN	CONTACT
 GENDER = (
+    ('','select'),
     ('Female','Female'),
-    ('','Male'),
+    ('Male','Male'),
 )
 # question paper language
 QPL = (
-    ('','English'),
+    ('','select'),
+    ('English','English'),
     ('Hindi','Hindi'),
 )
 CLASS = (
-        ('', '5'),
+        ('', 'select'),
+        ('5', '5'),
         ('6', '6'),
         ('7', '7'),
         ('8', '8'),
@@ -25,7 +30,8 @@ CLASS = (
     )
 
 BOARD = (
-    ('','BSEB'),
+    ('','select'),
+    ('BSEB','BSEB'),
     ('CBSE','CBSE'),
 )
 
@@ -36,7 +42,8 @@ BOARD = (
 # chess category
 
 C_CATEGORY = (
-    ('','Upto 13 yrs'),
+    ('','select'),
+    ('G1','Upto 13 yrs'),
     ('G2','From 14 to 17 yrs'),
     ('G3','Above 17 yrs'),
 )
@@ -44,22 +51,26 @@ C_CATEGORY = (
 
 
 F_CATEGORY = (
-    ('','V/VI/VII'),
-    ('SENIOR','VIII/IX/X'),
+    ('',''),
+    ('Junior','V/VI/VII'),
+    ('Senior','VIII/IX/X'),
 )
 R_CATEGORY = (
-    ('','JUNIOR'),
-    ('SENIOR','Above or equal to 13 yrs'),
+    ('','select'),
+    ('Junior','Below 13 years'),
+    ('Senior','Above or equal to 13 yrs'),
 )
 
 S_CATEGORY = (
-    ('','Upto 13 yrs'),
-    ('SENIOR','Above 13 yrs'),
+    ('','select'),
+    ('Junior','Upto 13 yrs'),
+    ('Senior','Above 13 yrs'),
 )
 
 P_CATEGORY = (
-    ('','VII/VIII'),
-    ('SENIOR','IX/X'),
+    ('','select'),
+    ('Junior','VII/VIII'),
+    ('Senior','IX/X'),
 )
 # ------------------------------------------------------------------------------------------------
 class Profile (models.Model):
@@ -72,7 +83,7 @@ class Profile (models.Model):
     gender          = models.CharField(default = 'Male', max_length=50, blank=True, null=False,choices = GENDER)
     addess          = models.CharField(max_length=50, blank=True, null=True)
     landmark        = models.CharField(max_length=50, blank=True, null=True)
-    birth_date      = models.DateField(("Date of birth"),null = False, default=datetime.date.today)
+    birth_date      = models.DateField(("Date of birth"),null = False,blank = False, default=datetime.date.today)
     ditrict         = models.CharField(max_length=50, blank=True, null=True)
     post_office     = models.PositiveIntegerField(validators=[MinValueValidator(100000), MaxValueValidator(999999)], blank=True, null=True)
     Home_number     = models.CharField(max_length=10, blank=True, null=True)
@@ -103,7 +114,6 @@ class MTSE (models.Model):
     mother_name     = models.CharField(max_length=50, blank=True, null=True)
     st_class        = models.CharField(choices=CLASS, max_length=2, blank=False,null = False ) 
     board           = models.CharField(max_length = 6,choices = BOARD)
-    class_study     = models.PositiveIntegerField(default=4, null=True, validators=[MinValueValidator(4), MaxValueValidator(10)])
     school          = models.CharField(max_length=50, blank=True, null=True)
     post_office     = models.CharField(max_length=50, blank=True, null=True)
     birth_date      = models.DateField(("Date of birth"), default=datetime.date.today)
@@ -112,7 +122,7 @@ class MTSE (models.Model):
     addess          = models.CharField(max_length=50, blank=True, null=True)
     ditrict         = models.CharField(max_length=50, blank=True, null=True)
     city            = models.CharField(max_length=50, blank=True, null=True)
-    pin             = models.PositiveIntegerField(validators=[MinValueValidator(1000000), MaxValueValidator(999999)], blank=True, null=True)
+    pin             = models.PositiveIntegerField(validators=[MinValueValidator(100000), MaxValueValidator(999999)], blank=True, null=True)
     Home_number     = models.CharField(max_length=10, blank=True, null=True)
     
 class PR (models.Model):

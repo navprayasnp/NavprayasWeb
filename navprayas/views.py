@@ -41,7 +41,9 @@ def register(request):
         birth_date = request.POST.get("birth_date")
         form = SignUpForm(request.POST)
         form2 = SignUpFormProfile(request.POST)
-        if form.is_valid() and form2.is_valid:
+        if form.is_valid() and form2.is_valid():
+            print(form2)
+            print(form)
             user = form.save(commit = False)
             user.username = user.email  #username and email is same so we are not using username
             user.save()
@@ -65,9 +67,7 @@ def register(request):
 def profile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST,
-                                #    request.FILES,
-                                   instance=request.user.profile)
+        p_form = ProfileUpdateForm(request.POST,instance=request.user.profile)
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
