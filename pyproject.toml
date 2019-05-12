@@ -8,6 +8,9 @@ authors = ["Ambuj Kumar <itsambuja@gmail.com>"]
 python = "^3.7"
 django-crispy-forms = "^1.7"
 django = "^2.2"
+oauth2client = "^4.1"
+google-api-python-client = "^1.7"
+pycryptodome = "^3.8"
 
 [tool.poetry.dev-dependencies]
 
