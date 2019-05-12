@@ -124,7 +124,8 @@ class MTSE (models.Model):
     city            = models.CharField(max_length=50, blank=True, null=True)
     pin             = models.PositiveIntegerField(validators=[MinValueValidator(100000), MaxValueValidator(999999)], blank=True, null=True)
     Home_number     = models.CharField(max_length=10, blank=True, null=True)
-    
+    payment         = models.BooleanField(default = False)
+
 class PR (models.Model):
     PR_user     = models.OneToOneField(User, on_delete = models.CASCADE)
     category    = models.CharField(choices=P_CATEGORY, max_length=12, blank=False) 
@@ -140,6 +141,7 @@ class PR (models.Model):
     class3      = models.PositiveIntegerField(default=4, null=True, validators=[MinValueValidator(4), MaxValueValidator(10)])
     address_3   = models.CharField(max_length=100 , blank=False)
     contact_3   = models.PositiveIntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
+    payment         = models.BooleanField(default = False)
 
 
 # Story and Poem Writing
@@ -149,7 +151,7 @@ class SPR (models.Model):
     category    = models.CharField(choices=S_CATEGORY, max_length=12, blank=False) 
     contact     = models.PositiveIntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
     addess     = models.CharField(max_length=50, blank=True, null=True)
-
+    payment         = models.BooleanField(default = False)
 
 class rangotsav (models.Model):
     rangotsav_user  = models.OneToOneField(User, on_delete = models.CASCADE,)
@@ -163,7 +165,7 @@ class rangotsav (models.Model):
     Full_name3  = models.CharField(max_length=50, blank=True, null=True)
     address_3   = models.CharField(max_length=100 , blank=False)
     contact_3   = models.PositiveIntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
-
+    payment         = models.BooleanField(default = False)
 
 
 class chess (models.Model):
@@ -172,11 +174,11 @@ class chess (models.Model):
     category = models.CharField(choices=C_CATEGORY, max_length=12, blank=False) 
     contact     = models.PositiveIntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
     addess     = models.CharField(max_length=50, blank=True, null=True)
-    
+    payment         = models.BooleanField(default = False)
 class FHS (models.Model):
     FHS_user    = models.OneToOneField(User, on_delete = models.CASCADE,)
     Full_name   = models.CharField(max_length=50, blank=True, null=True)
     category    = models.CharField(choices=F_CATEGORY ,max_length=12, blank=False) 
     contact     = models.PositiveIntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
     addess     = models.CharField(max_length=50, blank=True, null=True)
-
+    payment         = models.BooleanField(default = False)
