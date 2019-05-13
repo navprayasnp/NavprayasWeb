@@ -8,7 +8,9 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from navprayas import checksum as Checksum
 
-MERCHANT_KEY = 'ulwNhiAgmOgmYiBs'
+from secret import *
+
+MERCHANT_KEY = Secret.PAYMENT_MERCHANT_KEY
 CHESS_FEE   = '15'
 MTSE_FEE    = '25'
 FHS_FEE     = '10'
@@ -60,7 +62,7 @@ def handlerequest(request):
 
 def pay(username,price):
     param_dict = {
-            'MID': 'vibQhd01855522185852',
+            'MID': Secret.PAYMENT_MERCHANT_ID,
             'ORDER_ID': '11',
             'TXN_AMOUNT': price,
             'CUST_ID': 'kena421@gmail.com',
