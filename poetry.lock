@@ -12,7 +12,7 @@ description = "A high-level Python Web framework that encourages rapid developme
 name = "django"
 optional = false
 python-versions = ">=3.5"
-version = "2.2"
+version = "2.2.1"
 
 [package.dependencies]
 pytz = "*"
@@ -166,7 +166,7 @@ python-versions = "^3.7"
 
 [metadata.hashes]
 cachetools = ["219b7dc6024195b6f2bc3d3f884d1fef458745cd323b04165378622dcc823852", "9efcc9fab3b49ab833475702b55edd5ae07af1af7a4c627678980b45e459c460"]
-django = ["7c3543e4fb070d14e10926189a7fcf42ba919263b7473dceaefce34d54e8a119", "a2814bffd1f007805b19194eb0b9a331933b82bd5da1c3ba3d7b7ba16e06dc4b"]
+django = ["6fcc3cbd55b16f9a01f37de8bcbe286e0ea22e87096557f1511051780338eaea", "bb407d0bb46395ca1241f829f5bd03f7e482f97f7d1936e26e98dacb201ed4ec"]
 django-crispy-forms = ["5952bab971110d0b86c278132dae0aa095beee8f723e625c3d3fa28888f1675f", "705ededc554ad8736157c666681165fe22ead2dec0d5446d65fc9dd976a5a876"]
 google-api-python-client = ["06907006ed5ce831018f03af3852d739c0b2489cdacfda6971bcc2075c762858", "937eabdc3940977f712fa648a096a5142766b6d0a0f58bc603e2ac0687397ef0"]
 google-auth = ["0f7c6a64927d34c1a474da92cfc59e552a5d3b940d3266606c6a28b72888b9e4", "20705f6803fd2c4d1cc2dcb0df09d4dfcb9a7d51fd59e94a3a28231fd93119ed"]
