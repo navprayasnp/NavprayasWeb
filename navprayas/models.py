@@ -88,19 +88,18 @@ class Profile (models.Model):
     post_office     = models.PositiveIntegerField(validators=[MinValueValidator(100000), MaxValueValidator(999999)], blank=True, null=True)
     Home_number     = models.CharField(max_length=10, blank=True, null=True)
     contact         = models.PositiveIntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False,null = True)
-
+    
     def __str__(self):
         return f'{self.user.first_name}'
 
 #   --------------------------------------------------------------------------------------------------------------  # 
 
-
 def create_profile(sender, **kwargs):
     if(kwargs["created"]):
         user_profile = Profile.objects.create(user = kwargs["instance"])
 
-
 post_save.connect(create_profile,sender=User)
+
 
 
 
@@ -125,6 +124,8 @@ class MTSE (models.Model):
     pin             = models.PositiveIntegerField(validators=[MinValueValidator(100000), MaxValueValidator(999999)], blank=True, null=True)
     Home_number     = models.CharField(max_length=10, blank=True, null=True)
     payment         = models.BooleanField(default = False)
+    order_id        = models.CharField(max_length = 20,blank = True,null = True)
+    txn_date        = models.DateTimeField(null = True,blank = True  )
 
 class PR (models.Model):
     PR_user     = models.OneToOneField(User, on_delete = models.CASCADE)
@@ -142,6 +143,8 @@ class PR (models.Model):
     address_3   = models.CharField(max_length=100 , blank=False)
     contact_3   = models.PositiveIntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
     payment         = models.BooleanField(default = False)
+    order_id        = models.CharField(max_length = 20,blank = True,null = True)
+    txn_date        = models.DateTimeField(null = True,blank = True  )
 
 
 # Story and Poem Writing
@@ -150,8 +153,11 @@ class SPR (models.Model):
     Full_name   = models.CharField(max_length=50, blank=True, null=True)
     category    = models.CharField(choices=S_CATEGORY, max_length=12, blank=False) 
     contact     = models.PositiveIntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
-    addess     = models.CharField(max_length=50, blank=True, null=True)
-    payment         = models.BooleanField(default = False)
+    addess      = models.CharField(max_length=50, blank=True, null=True)
+    payment     = models.BooleanField(default = True)
+    order_id        = models.CharField(max_length = 20,blank = True,null = True)
+    txn_date        = models.DateTimeField(null = True,blank = True  )
+
 
 class rangotsav (models.Model):
     rangotsav_user  = models.OneToOneField(User, on_delete = models.CASCADE,)
@@ -165,7 +171,9 @@ class rangotsav (models.Model):
     Full_name3  = models.CharField(max_length=50, blank=True, null=True)
     address_3   = models.CharField(max_length=100 , blank=False)
     contact_3   = models.PositiveIntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
-    payment         = models.BooleanField(default = False)
+    payment     = models.BooleanField(default = True)
+    order_id        = models.CharField(max_length = 20,blank = True,null = True)
+    txn_date        = models.DateTimeField(null = True,blank = True  )
 
 
 class chess (models.Model):
@@ -174,7 +182,11 @@ class chess (models.Model):
     category = models.CharField(choices=C_CATEGORY, max_length=12, blank=False) 
     contact     = models.PositiveIntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
     addess     = models.CharField(max_length=50, blank=True, null=True)
+    txn_date        = models.DateTimeField(null = True,blank = True  )
     payment         = models.BooleanField(default = False)
+    order_id        = models.CharField(max_length = 20,blank = True,null = True)
+
+
 class FHS (models.Model):
     FHS_user    = models.OneToOneField(User, on_delete = models.CASCADE,)
     Full_name   = models.CharField(max_length=50, blank=True, null=True)
@@ -182,3 +194,6 @@ class FHS (models.Model):
     contact     = models.PositiveIntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
     addess     = models.CharField(max_length=50, blank=True, null=True)
     payment         = models.BooleanField(default = False)
+    txn_date        = models.DateTimeField(null = True,blank = True  )
+    order_id        = models.CharField(max_length = 20,blank = True,null = True)
+
