@@ -118,3 +118,14 @@ Execute `source .venv/bin/activate` (on unix systems) or `source .venv/Scripts/a
 
 
  Add your name and email (as configured in git) in `pyprojects.toml` file. You are now ready to work
+
+ ### for Password
+ ```py
+ # secret.py in NP
+
+ def getUser():
+    return '<gmail>'
+
+def getPass():
+    return '<pass>'
+ ```
