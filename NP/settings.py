@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from .secret import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -105,19 +106,19 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # email 
 # run > python -m smtpd -n -c DebuggingServer localhost:1025
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
+#EMAIL_HOST = 'localhost'
+#EMAIL_PORT = 1025
 
 
 # for getting email to reset password using gmail 
-'''
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = '<username@organisation.com>'
-EMAIL_HOST_PASSWORD = '<password>'
-'''
+EMAIL_HOST_USER = getUser()
+EMAIL_HOST_PASSWORD = getPass()
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
