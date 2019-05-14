@@ -9,6 +9,11 @@ from django.views.decorators.csrf import csrf_exempt
 from navprayas import checksum as Checksum
 
 from secret import *
+import string
+import random
+TRN_DIGITS = 9
+def OID(size=TRN_DIGITS, chars=string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 MERCHANT_KEY = Secret.PAYMENT_MERCHANT_KEY
 CHESS_FEE   = '15'
@@ -44,35 +49,68 @@ def team(request):
 @csrf_exempt
 def handlerequest(request):
     # paytm will send you post request here
-    form = request.POST
-    response_dict = {}
-    for i in form.keys():
-        response_dict[i] = form[i]
-        if i == 'CHECKSUMHASH':
-            checksum = form[i]
+    if request.method == 'POST':
+        form = request.POST
+        print(form)
+        response_dict = {}
+        for i in form.keys():
+            response_dict[i] = form[i]
+            if i == 'CHECKSUMHASH':
+                checksum = form[i]
 
-    verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
-    if verify:
-        if response_dict['RESPCODE'] == '01':
-            print('order successful')
-        else:
-            print('order was not successful because' + response_dict['RESPMSG'])
-    return render(request, 'navprayas/paytm/status.html', {'response': response_dict})
+        verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
+        if verify:
+            if response_dict['RESPCODE'] == '01':
+                print('order successful')
+                oid = response_dict['ORDERID']
+                txndate = response_dict['TXNDATE']
+                mtse = MTSE.objects.filter(order_id = oid).first()
+                if mtse is not None:
+                    mtse.payment = True
+                    mtse.txn_date = txndate
+                    mtse.save()
+                pr = PR.objects.filter(order_id = oid).first()
+                if pr is not None:
+                    pr.payment = True
+                    pr.txn_date = txndate
+                    pr.save()
+                fhs = FHS.objects.filter(order_id = oid).first()
+                if fhs is not None:
+                    fhs.payment = True
+                    fhs.txn_date = txndate
+                    fhs.save()
+                ches = chess.objects.filter(order_id = oid).first()
+                if ches is not None:    # please donot rectify ches
+                    ches.payment = True
+                    ches.txn_date = txndate
+                    ches.save()
+                
 
 
-def pay(username,price):
+
+            else:
+                print('order was not successful because' + response_dict['RESPMSG'])
+        return render(request, 'navprayas/paytm/status.html', {'response': response_dict})
+    return redirect('index')
+
+
+def pay(user_id,price,form):
+    oid = 'O19'+OID()
+    form.order_id = oid
+    form.save() 
+    
+
     param_dict = {
             'MID': Secret.PAYMENT_MERCHANT_ID,
-            'ORDER_ID': '11',
+            'ORDER_ID': oid,
             'TXN_AMOUNT': price,
-            'CUST_ID': 'kena421@gmail.com',
+            'CUST_ID': str(user_id),
             'INDUSTRY_TYPE_ID': 'Retail',
             'WEBSITE': 'DEFAULT',
             'CHANNEL_ID': 'WEB',
             'CALLBACK_URL':'http://127.0.0.1:8000/handlerequest/',
             'INDUSTRY_TYPE_ID' : 'Retail',
             'CHANNEL_ID' : 'WEB',
-            'CUST_ID' :'ram',
 
             }
     param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
@@ -93,12 +131,15 @@ def chess_register(request):
                 chess_filled = form.save(commit=False)
                 chess_filled.chess_user=request.user
                 chess_filled.save()
-                param_dict = pay(request.user.username,CHESS_FEE)
+                param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
+
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})   
         else:
             form = chess_form()
             
-
+    elif chess_filled.payment is False:
+        param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
+        return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
     else:
         return render(request, 'navprayas/home_links/submitted.html', {})
     return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})
@@ -118,8 +159,6 @@ def register(request):
         form = SignUpForm(request.POST)
         form2 = SignUpFormProfile(request.POST)
         if form.is_valid() and form2.is_valid():
-            print(form2)
-            print(form)
             user = form.save(commit = False)
             user.username = user.email  #username and email is same so we are not using username
             user.save()
@@ -201,10 +240,16 @@ def MTSE_register(request):
                 MTSE_filled = form.save(commit=False)
                 MTSE_filled.MTSE_user=request.user
                 MTSE_filled.save()
-                param_dict = pay(request.user.username,MTSE_FEE)
+                param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
         else:
             form = MTSE_form()           
+    elif MTSE_filled.payment is False:
+        param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
+        print('**************************************************')
+        print(param_dict)
+        print('**************************************************')
+        return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
 
     else:
         return render(request, 'navprayas/home_links/submitted.html', {})
@@ -228,11 +273,14 @@ def FHS_register(request):
                 FHS_filled = form.save(commit=False)
                 FHS_filled.FHS_user=request.user
                 FHS_filled.save()
-                param_dict = pay(request.user.username,FHS_FEE)
+                param_dict = pay(request.user.id,FHS_FEE,FHS_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
         else:
-            form = FHS_form()           
-
+            form = FHS_form() 
+# if payment is not done but form is filled               
+    elif FHS_filled.payment is False:
+        param_dict = pay(request.user.id,FHS_FEE,FHS_filled)
+        return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
     else:
         return render(request, 'navprayas/home_links/submitted.html', {})
     return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})
@@ -275,12 +323,15 @@ def PR_register(request):
                 PR_filled = form.save(commit=False)
                 PR_filled.PR_user=request.user
                 PR_filled.save()
-                param_dict = pay(request.user.username,PR_FEE,)
+                param_dict = pay(request.user.id,PR_FEE,PR_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})   
         else:
             form = PR_form()
            
 
+    elif PR_filled.payment is False:
+        param_dict = pay(request.user.id,PR_FEE,PR_filled)
+        return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
     else:
         return render(request, 'navprayas/home_links/submitted.html', {})
     return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})
@@ -302,6 +353,8 @@ def SPR_register(request):
                 SPR_filled.save()
                 
                 return redirect('index')
+        
+        
         else:
             form = SPR_form()
             
