@@ -1,10 +1,31 @@
-<div class="col my-4">
+{% extends 'navprayas/base.html' %}
+{% block title %}PSR registration{% endblock %}
 
-    <h2>Payment status regarding your order Id {{response.ORDERID}}</h2>
-    {% if response.RESPCODE == '01' %}
-    ORDER SUCCESS
-    {% else %}
-    ORDER FAILURE
-    {% endif%}
+{% load crispy_forms_tags %}
 
-</div>
+{% block content %}
+<section class="section-gap achivement-area">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-10">
+          <div class="achivement-content">
+                <h2 style="text-align: center;">Payment status regarding your order Id {{response.ORDERID}}</h2><br>
+                {% if response.RESPCODE == '01' %}
+                <h3 style="text-align: center;">Your Order is successful.</h3>
+                {% else %}
+                <h3 style="text-align: center;">Your Order is not successful.</h3>
+                {% endif%}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+    <script>
+        document.paytm.submit()
+    </script>
+ {% endblock %}
+
+ {% block contact %}{% endblock %}
+{% block footer %}{% endblock %}
