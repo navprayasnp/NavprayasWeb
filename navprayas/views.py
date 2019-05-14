@@ -7,6 +7,7 @@ from .forms import * #all the components from .form
 import json
 from django.views.decorators.csrf import csrf_exempt
 from navprayas import checksum as Checksum
+from django.contrib import messages 
 
 from secret import *
 import string
@@ -161,6 +162,20 @@ def register(request):
         if form.is_valid() and form2.is_valid():
             user = form.save(commit = False)
             user.username = user.email  #username and email is same so we are not using username
+            
+            if User.objects.filter(username = user.username) is not None :
+                print('*************************************************')
+                messages.warning(request, 'username already exists')
+                form = SignUpForm(request.POST)
+                context = {
+                'form' : form,
+                'form2' : form2,
+                }
+                print('111111111111111111111111111111111111111111111111')
+                print(form.errors)
+                return render(request, 'navprayas/users/signup.html',context)
+
+                return redirect('signup')
             user.save()
             a = Profile.objects.filter(user = user).first()
             a.gender = gender
