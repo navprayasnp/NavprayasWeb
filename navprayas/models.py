@@ -137,7 +137,7 @@ class PR (models.Model):
     Full_name2  = models.CharField(max_length=50, blank=True, null=True)
     class2      = models.PositiveIntegerField(default=4, null=True, validators=[MinValueValidator(4), MaxValueValidator(10)])
     address_2   = models.CharField(max_length=100 , blank=False)
-    contact_3   = models.PositiveIntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
+    contact_3   = models.PositiveIntegerField(verbose_name='Contact', validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
     Full_name3  = models.CharField(max_length=50, blank=True, null=True)
     class3      = models.PositiveIntegerField(default=4, null=True, validators=[MinValueValidator(4), MaxValueValidator(10)])
     address_3   = models.CharField(max_length=100 , blank=False)
