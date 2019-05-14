@@ -28,6 +28,7 @@
 		<link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
 		<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 	</head>
 	<body class="dup-body">
 	<div id="fb-root"></div>
@@ -58,22 +59,8 @@
                                         <li role="presentation"><a role="menuitem" tabindex="-1" href={% url 'FHS_register' %} style="padding-left:2mm;">Free Hand Sketching</a></li>
                                         <li role="presentation"><a role="menuitem" tabindex="-1" href={% url 'chess_register' %} style="padding-left:2mm;">Chess</a></li>
                                         <li role="presentation"><a role="menuitem" tabindex="-1" href={% url 'rangotsav_register' %} style="padding-left:2mm;">Rangotsav</a></li>
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" href={% url 'SPR_register' %} style="padding-left:2mm;">SPR</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href={% url 'SPR_register' %} style="padding-left:2mm;">Poem & story writing</a></li>
                                         </ul>
-                                    
-                                <!-- <div class="btn-group">
-                                        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Competitions
-                                              </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href={% url 'MTSE_register' %}>MTSE</a>
-                                        <a class="dropdown-item" href={% url 'PR_register' %}>Puzzle race</a>
-                                        <a class="dropdown-item" href={% url 'FHS_register' %}>FHS</a>
-                                        <a class="dropdown-item" href={% url 'chess_register' %}>chess</a>
-                                        <a class="dropdown-item" href={% url 'rangotsav_register' %}>rangotsav</a>
-                                        <a class="dropdown-item" href={% url 'SPR_register' %}>SPR</a>
-                                    </div>
-                                </div> -->
                             </div>
                             <div class="main-menubar d-flex align-items-center">
                                 <nav class="hide">
@@ -94,9 +81,26 @@
             {% block content %}
                 <!-- here will be the main contents -->
             {% endblock %}
-
-          
-			
+			<div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+                    
+                      <!-- Modal content-->
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Confirm your credentials</h4>
+                        </div>
+                        <div class="modal-body">
+                          <p>Please check if the information provided by you is correct. After this step, you won't be able to edit anything.</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-default" data-dismiss="modal">Proceed to Pay</button>
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
             
             <!-- Start Contact Area -->
             {% block contact %}
