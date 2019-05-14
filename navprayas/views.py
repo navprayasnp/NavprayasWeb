@@ -315,7 +315,6 @@ def rangotsav_register(request):
 def PR_register(request):
 
     PR_filled = PR.objects.filter(PR_user=request.user).first() #if returns none then u can fill form
-
     if PR_filled is None:
         if request.method == 'POST':
             form = PR_form(request.POST)
@@ -324,8 +323,11 @@ def PR_register(request):
                 PR_filled.PR_user=request.user
                 PR_filled.save()
                 param_dict = pay(request.user.id,PR_FEE,PR_filled)
-                return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})   
+                print("*************************************************")
+                return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+
         else:
+            print("################################")
             form = PR_form()
            
 
