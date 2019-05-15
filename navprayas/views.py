@@ -7,7 +7,11 @@ from .forms import * #all the components from .form
 import json
 from django.views.decorators.csrf import csrf_exempt
 from navprayas import checksum as Checksum
-from django.contrib import messages 
+from django.contrib import messages
+from django.core.mail import send_mail
+#from django.contrib.auth.models import User
+
+
 
 from secret import *
 import string
@@ -404,4 +408,8 @@ def SPR_register(request):
 #         return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
 
 #     return render(request, 'navprayas/paytm/pay.html')
+
+#########################################################################
+
+
 
