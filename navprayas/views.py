@@ -160,22 +160,17 @@ def register(request):
         form = SignUpForm(request.POST)
         form2 = SignUpFormProfile(request.POST)
         if form.is_valid() and form2.is_valid():
-            user = form.save(commit = False)
-            user.username = user.email  #username and email is same so we are not using username
-            
-            if User.objects.filter(username = user.username) is not None :
-                print('*************************************************')
+            email = form.cleaned_data['email']
+            if User.objects.filter(email = email).exists():
                 messages.warning(request, 'username already exists')
                 form = SignUpForm(request.POST)
                 context = {
                 'form' : form,
                 'form2' : form2,
                 }
-                print('111111111111111111111111111111111111111111111111')
-                print(form.errors)
                 return render(request, 'navprayas/users/signup.html',context)
-
-                return redirect('signup')
+            user = form.save(commit = False)
+            user.username = user.email  #username and email is same so we are not using username
             user.save()
             a = Profile.objects.filter(user = user).first()
             a.gender = gender
@@ -215,15 +210,6 @@ def profile(request):
     return render(request, 'navprayas/users/profile.html', context)
 
 
-# def Mail(request):
-#     if request.method== 'POST':
-#         to = request.POST["to"]
-#         subject = request.POST["subject"]
-#         body = request.POST["body"]
-#         mail(to,subject,body)
-        
-
-#     return render(request, 'navprayas/mail.html', {})
 
 
 
@@ -246,8 +232,8 @@ def profile(request):
 # *************************
 @login_required
 def MTSE_register(request):
-    print(request.user.profile)
     MTSE_filled = MTSE.objects.filter(MTSE_user=request.user).first() #if returns none then u can fill form
+    form = MTSE_form()
     if MTSE_filled is None:
         if request.method == 'POST':
             form = MTSE_form(request.POST)
@@ -260,15 +246,40 @@ def MTSE_register(request):
         else:
             form = MTSE_form()           
     elif MTSE_filled.payment is False:
-        param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
-        print('**************************************************')
-        print(param_dict)
-        print('**************************************************')
-        return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+        print('**********************')
+        form = MTSE_form() 
+        print(form.board)
+        print('***************')
+             
+        return render(request, 'navprayas/home_links/proceed.html', {'form': form})
 
     else:
         return render(request, 'navprayas/home_links/submitted.html', {})
     return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})
+
+@login_required
+def already_applied(request):
+    pass
+    # MTSE_filled = MTSE.objects.filter(MTSE_user=request.user).first() #if returns none then u can fill form
+    # if MTSE_filled is None:
+    #     if request.method == 'POST':
+    #         form = MTSE_form(request.POST)
+    #         if form.is_valid():
+    #             MTSE_filled = form.save(commit=False)
+    #             MTSE_filled.MTSE_user=request.user
+    #             MTSE_filled.save()
+    #             param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
+    #             return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+    # elif MTSE_filled.payment is False:
+    #     param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
+    #     print(param_dict)
+    #     return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+
+    # else:
+    #     return render(request, 'navprayas/home_links/submitted.html', {})
+    # if request.method == 'GET':
+    #     form = MTSE_form()
+    # return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})
 
 
 
