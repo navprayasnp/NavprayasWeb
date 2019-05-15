@@ -143,3 +143,4 @@ LOGIN_URL = 'login'
 
 LOGOUT_REDIRECT_URL = '/index/'
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
