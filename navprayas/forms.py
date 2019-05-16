@@ -51,7 +51,7 @@ class ProfileUpdateForm(forms.ModelForm):
             'landmark',
             'addess',
             'contact',
-            'post_office',
+            'pin',
             'ditrict',
             'city',
         ]
@@ -103,7 +103,7 @@ class PR_form(forms.ModelForm):
             'Full_name2',
             'class2',
             'address_2',
-            'contact_3',
+            'contact_2',
             'Full_name3',
             'class3',
             'address_3',
