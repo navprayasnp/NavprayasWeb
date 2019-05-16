@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login   #as it clashes with other login term
+
+
 from .forms import * #all the components from .form
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -54,6 +56,7 @@ def team(request):
 @csrf_exempt
 def handlerequest(request):
     # paytm will send you post request here
+    np_email = Secret.USERID_FOR_EMAIL
     if request.method == 'POST':
         form = request.POST
         print(form)
@@ -74,22 +77,43 @@ def handlerequest(request):
                     mtse.payment = True
                     mtse.txn_date = txndate
                     mtse.save()
+                    email = mtse.MTSE_user.email
+                    sub = "Confirmation for your registration"
+                    mgs = "You  have succesfullly registered for MTSE.\n Your application ID is " + str(oid) + ".\n\n\n\n\n\n\n\n" + "NAVPRAYAS OFFICE\n 1st floor Durga Asthan Market \nManpur Patwatoli Gaya,PIN-823003\nBihar, India"
+                    send_mail(sub, mgs, np_email, [email])
+
                 pr = PR.objects.filter(order_id = oid).first()
                 if pr is not None:
                     pr.payment = True
                     pr.txn_date = txndate
                     pr.save()
+                    email=pr.PR_user.email
+                    sub = "Confirmation for your registration"
+                    mgs = "You  have succesfullly registered for PUZZLE RACE.\n Your application ID is " + str(oid) + ".\n\n\n\n\n\n\n\n" + "NAVPRAYAS OFFICE\n 1st floor Durga Asthan Market \nManpur Patwatoli Gaya,PIN-823003\nBihar, India"
+                    send_mail(sub, mgs, np_email, [email])
+
                 fhs = FHS.objects.filter(order_id = oid).first()
                 if fhs is not None:
                     fhs.payment = True
                     fhs.txn_date = txndate
                     fhs.save()
+                    email=fhs.FHS_user.email
+                    print(oid)
+                    sub="Confirmation for your registration"
+                    mgs="You  have succesfullly registered for FREE HAND SKETCHING  .\n Your application ID is " + str(oid) + ".\n\n\n\n\n\n\n\n" + "NAVPRAYAS OFFICE\n 1st floor Durga Asthan Market \nManpur Patwatoli Gaya,PIN-823003\nBihar, India"
+                    send_mail(sub, mgs, np_email, [email])
+
                 ches = chess.objects.filter(order_id = oid).first()
                 if ches is not None:    # please donot rectify ches
                     ches.payment = True
                     ches.txn_date = txndate
                     ches.save()
-                
+                    email=ches.chess_user.email
+                    sub = "Confirmation for your registration"
+                    mgs = "You  have succesfullly registered for CHESS.\n Your application ID is " + str(oid) + ".\n\n\n\n\n\n\n\n" + "NAVPRAYAS OFFICE\n 1st floor Durga Asthan Market \nManpur Patwatoli Gaya,PIN-823003\nBihar, India"
+                    send_mail(sub, mgs, np_email, [email])
+
+
 
 
 
@@ -316,7 +340,7 @@ def chess_register(request):
                 chess_filled = form.save(commit=False)
                 chess_filled.chess_user=request.user
                 chess_filled.save()
-                param_dict = pay(request.user.id,chess_FEE,chess_filled)
+                param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
         else:
             form = chess_form() 
@@ -328,7 +352,7 @@ def chess_register(request):
             form = chess_form(request.POST,instance=request.user.chess)
             if form.is_valid() :
                 form.save()
-                param_dict = pay(request.user.id,chess_FEE,form)
+                param_dict = pay(request.user.id,CHESS_FEE,form)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
         else:
             form = chess_form(instance=request.user.chess)

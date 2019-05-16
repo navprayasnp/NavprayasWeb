@@ -179,7 +179,7 @@ class rangotsav (models.Model):
 class chess (models.Model):
     chess_user = models.OneToOneField(User, on_delete = models.CASCADE,)
     Full_name   = models.CharField(max_length=50, blank=False, null=True)
-    category = models.CharField(verbose_name="Contact",choices=C_CATEGORY, max_length=12, blank=False)
+    category = models.CharField(verbose_name="Category",choices=C_CATEGORY, max_length=12, blank=False)
     contact     = models.PositiveIntegerField(verbose_name="Contact",validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False)
     addess     = models.CharField(verbose_name="Address",max_length=50, blank=False, null=True)
     txn_date        = models.DateTimeField(null = True,blank = True  )
