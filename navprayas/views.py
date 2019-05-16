@@ -316,7 +316,7 @@ def chess_register(request):
                 chess_filled = form.save(commit=False)
                 chess_filled.chess_user=request.user
                 chess_filled.save()
-                param_dict = pay(request.user.id,chess_FEE,chess_filled)
+                param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
         else:
             form = chess_form() 
@@ -328,7 +328,7 @@ def chess_register(request):
             form = chess_form(request.POST,instance=request.user.chess)
             if form.is_valid() :
                 form.save()
-                param_dict = pay(request.user.id,chess_FEE,form)
+                param_dict = pay(request.user.id,CHESS_FEE,form)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
         else:
             form = chess_form(instance=request.user.chess)
