@@ -141,12 +141,31 @@ def chess_register(request):
     elif chess_filled.payment is False:
         param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
         return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
-    else:
+    elif chess_filled.payment is True: #
         return render(request, 'navprayas/home_links/submitted.html', {})
     return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})
 
 
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST,instance=request.user.profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            return redirect('profile')
 
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'u_form': u_form,
+        'p_form': p_form
+    }
+
+    return render(request, 'navprayas/users/profile.html', context)
 
 
 
@@ -188,26 +207,7 @@ def register(request):
 
 
 
-@login_required
-def profile(request):
-    if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST,instance=request.user.profile)
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
-            return redirect('profile')
 
-    else:
-        u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user.profile)
-
-    context = {
-        'u_form': u_form,
-        'p_form': p_form
-    }
-
-    return render(request, 'navprayas/users/profile.html', context)
 
 
 
@@ -230,56 +230,36 @@ def profile(request):
 # *************************
 # MTSE
 # *************************
+
 @login_required
 def MTSE_register(request):
     MTSE_filled = MTSE.objects.filter(MTSE_user=request.user).first() #if returns none then u can fill form
-    form = MTSE_form()
-    if MTSE_filled is None:
+    if MTSE_filled is None: #if form is filled
         if request.method == 'POST':
             form = MTSE_form(request.POST)
             if form.is_valid():
                 MTSE_filled = form.save(commit=False)
                 MTSE_filled.MTSE_user=request.user
                 MTSE_filled.save()
+                #form filled
+                #proceed for paymment
                 param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
         else:
-            form = MTSE_form()           
+            form = MTSE_form()
+            return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})           
     elif MTSE_filled.payment is False:
-        print('**********************')
-        form = MTSE_form() 
-        print(form.board)
-        print('***************')
-             
-        return render(request, 'navprayas/home_links/proceed.html', {'form': form})
-
-    else:
+        if request.method == 'POST' :
+            form = MTSE_form(request.POST,instance=request.user.mtse)
+            if form.is_valid() :
+                form.save()
+                param_dict = pay(request.user.id,MTSE_FEE,form)
+                return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+        else:
+            form = MTSE_form(instance=request.user.mtse)
+            return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})
+    else :
         return render(request, 'navprayas/home_links/submitted.html', {})
-    return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})
-
-@login_required
-def already_applied(request):
-    pass
-    # MTSE_filled = MTSE.objects.filter(MTSE_user=request.user).first() #if returns none then u can fill form
-    # if MTSE_filled is None:
-    #     if request.method == 'POST':
-    #         form = MTSE_form(request.POST)
-    #         if form.is_valid():
-    #             MTSE_filled = form.save(commit=False)
-    #             MTSE_filled.MTSE_user=request.user
-    #             MTSE_filled.save()
-    #             param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
-    #             return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
-    # elif MTSE_filled.payment is False:
-    #     param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
-    #     print(param_dict)
-    #     return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
-
-    # else:
-    #     return render(request, 'navprayas/home_links/submitted.html', {})
-    # if request.method == 'GET':
-    #     form = MTSE_form()
-    # return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})
 
 
 
@@ -303,17 +283,85 @@ def FHS_register(request):
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
         else:
             form = FHS_form() 
+            return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})           
+
 # if payment is not done but form is filled               
     elif FHS_filled.payment is False:
-        param_dict = pay(request.user.id,FHS_FEE,FHS_filled)
-        return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+        if request.method == 'POST' :
+            form = FHS_form(request.POST,instance=request.user.fhs)
+            if form.is_valid() :
+                form.save()
+                param_dict = pay(request.user.id,FHS_FEE,form)
+                return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+        else:
+            form = FHS_form(instance=request.user.fhs)
+            return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})
     else:
         return render(request, 'navprayas/home_links/submitted.html', {})
-    return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})
 
 
 
+@login_required
+def chess_register(request):
+    chess_filled = chess.objects.filter(chess_user=request.user).first() #if returns none then u can fill form
 
+    if chess_filled is None:
+        if request.method == 'POST':
+            form = chess_form(request.POST)
+            if form.is_valid():
+                chess_filled = form.save(commit=False)
+                chess_filled.chess_user=request.user
+                chess_filled.save()
+                param_dict = pay(request.user.id,chess_FEE,chess_filled)
+                return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+        else:
+            form = chess_form() 
+            return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})           
+
+# if payment is not done but form is filled               
+    elif chess_filled.payment is False:
+        if request.method == 'POST' :
+            form = chess_form(request.POST,instance=request.user.chess)
+            if form.is_valid() :
+                form.save()
+                param_dict = pay(request.user.id,chess_FEE,form)
+                return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+        else:
+            form = chess_form(instance=request.user.chess)
+            return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})
+    else:
+        return render(request, 'navprayas/home_links/submitted.html', {})
+
+@login_required
+def PR_register(request):
+    PR_filled = PR.objects.filter(PR_user=request.user).first() #if returns none then u can fill form
+
+    if PR_filled is None:
+        if request.method == 'POST':
+            form = PR_form(request.POST)
+            if form.is_valid():
+                PR_filled = form.save(commit=False)
+                PR_filled.PR_user=request.user
+                PR_filled.save()
+                param_dict = pay(request.user.id,PR_FEE,PR_filled)
+                return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+        else:
+            form = PR_form() 
+            return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})           
+
+# if payment is not done but form is filled               
+    elif PR_filled.payment is False:
+        if request.method == 'POST' :
+            form = PR_form(request.POST,instance=request.user.pr)
+            if form.is_valid() :
+                form.save()
+                param_dict = pay(request.user.id,PR_FEE,form)
+                return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+        else:
+            form = PR_form(instance=request.user.pr)
+            return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})
+    else:
+        return render(request, 'navprayas/home_links/submitted.html', {})
 # *************************
 # rangotsav
 # *************************
@@ -337,32 +385,6 @@ def rangotsav_register(request):
 # *************************
 # PR
 # *************************
-@login_required
-def PR_register(request):
-
-    PR_filled = PR.objects.filter(PR_user=request.user).first() #if returns none then u can fill form
-    if PR_filled is None:
-        if request.method == 'POST':
-            form = PR_form(request.POST)
-            if form.is_valid():
-                PR_filled = form.save(commit=False)
-                PR_filled.PR_user=request.user
-                PR_filled.save()
-                param_dict = pay(request.user.id,PR_FEE,PR_filled)
-                print("*************************************************")
-                return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
-
-        else:
-            print("################################")
-            form = PR_form()
-           
-
-    elif PR_filled.payment is False:
-        param_dict = pay(request.user.id,PR_FEE,PR_filled)
-        return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
-    else:
-        return render(request, 'navprayas/home_links/submitted.html', {})
-    return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})
 
 # *************************
 # SPR
@@ -381,8 +403,6 @@ def SPR_register(request):
                 SPR_filled.save()
                 
                 return redirect('index')
-        
-        
         else:
             form = SPR_form()
             
@@ -395,24 +415,4 @@ def SPR_register(request):
 # chess
 # *************************
 
-
-# def payment(request):
-#     if request.method=="POST":
-#         # Request paytm to transfer the amount to your account after payment by user
-#         param_dict = {
-
-#                 'MID': 'iArBym81738942720672',
-#                 'ORDER_ID': '2',
-#                 'TXN_AMOUNT': '30',
-#                 'CUST_ID': 'kena421@gmail.com',
-#                 'INDUSTRY_TYPE_ID': 'Retail',
-#                 'WEBSITE': 'WEBSTAGING',
-#                 'CHANNEL_ID': 'WEB',
-#                 'CALLBACK_URL':'http://127.0.0.1:8000/handlerequest/',
-
-#         }
-#         param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
-#         return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
-
-#     return render(request, 'navprayas/paytm/pay.html')
 

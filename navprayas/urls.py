@@ -59,6 +59,5 @@ urlpatterns = [
 
     # path("payment/", views.payment, name="payment"),
     path("handlerequest/", views.handlerequest, name="handlerequest"),
-    path("already_applied/", views.already_applied, name="already_applied"),
 
 ]
