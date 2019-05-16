@@ -48,6 +48,34 @@ def notifications(request):
 def team(request):
     return render(request, 'navprayas/home_links/team.html', {})
 
+def status(user):
+    status_dict ={}
+    rangotsav1 = rangotsav.objects.filter(rangotsav_user_id = user.id ).first()
+    if rangotsav1 is not None   :
+        status_dict['RANGOTSAV'] = 'SUCCESSFUL'
+    fhs1 = FHS.objects.filter(FHS_user_id = user.id ).first()
+    if fhs1 is not None   :
+        if fhs1.payment :
+            status_dict['FHS'] ='SUCCESSFUL'
+    pr1 = PR.objects.filter(PR_user_id = user.id ).first()
+    if pr1 is not None   :
+        if pr1.payment :
+            status_dict['PUZZLE RACE'] = 'SUCCESSFUL'
+    mtse1 = MTSE.objects.filter(MTSE_user_id = user.id ).first()
+    if mtse1 is not None   :
+        if mtse1.payment :
+            status_dict['MTSE'] ='SUCCESSFUL'
+    chess1 = chess.objects.filter(chess_user_id = user.id ).first()
+    if chess1 is not None   :
+        if chess1.payment :
+            status_dict['CHESS'] = 'SUCCESSFUL'
+    spr1 = SPR.objects.filter(SPR_user_id = user.id ).first()
+    if spr1 is not None   :
+        status_dict['P & S WRITIING'] = 'SUCCESSFUL'
+    return status_dict
+
+
+
 
 
 # *************************
@@ -176,6 +204,7 @@ def chess_register(request):
 
 @login_required
 def profile(request):
+    statuses=status(request.user)
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST,instance=request.user.profile)
@@ -190,7 +219,8 @@ def profile(request):
 
     context = {
         'u_form': u_form,
-        'p_form': p_form
+        'p_form': p_form,
+        'status': statuses,
     }
 
     return render(request, 'navprayas/users/profile.html', context)
@@ -280,8 +310,8 @@ def MTSE_register(request):
         if request.method == 'POST' :
             form = MTSE_form(request.POST,instance=request.user.mtse)
             if form.is_valid() :
-                form.save()
-                param_dict = pay(request.user.id,MTSE_FEE,form)
+                MTSE_filled = form.save()
+                param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
         else:
             form = MTSE_form(instance=request.user.mtse)
@@ -318,8 +348,8 @@ def FHS_register(request):
         if request.method == 'POST' :
             form = FHS_form(request.POST,instance=request.user.fhs)
             if form.is_valid() :
-                form.save()
-                param_dict = pay(request.user.id,FHS_FEE,form)
+                FHS_filled=form.save()
+                param_dict = pay(request.user.id,FHS_FEE,FHS_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
         else:
             form = FHS_form(instance=request.user.fhs)
@@ -351,8 +381,8 @@ def chess_register(request):
         if request.method == 'POST' :
             form = chess_form(request.POST,instance=request.user.chess)
             if form.is_valid() :
-                form.save()
-                param_dict = pay(request.user.id,CHESS_FEE,form)
+                chess_filled=form.save()
+                param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
         else:
             form = chess_form(instance=request.user.chess)
@@ -382,8 +412,8 @@ def PR_register(request):
         if request.method == 'POST' :
             form = PR_form(request.POST,instance=request.user.pr)
             if form.is_valid() :
-                form.save()
-                param_dict = pay(request.user.id,PR_FEE,form)
+                PR_filled=form.save()
+                param_dict = pay(request.user.id,PR_FEE,PR_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
         else:
             form = PR_form(instance=request.user.pr)
