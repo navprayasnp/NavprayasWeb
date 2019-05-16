@@ -2,6 +2,7 @@
 {% block title %}PSR registration{% endblock %}
 
 {% load crispy_forms_tags %}
+{% block navigation %}{% endblock %}
 
 {% block content %}
 <section class="section-gap achivement-area">
@@ -15,6 +16,8 @@
                 {% else %}
                 <h3 style="text-align: center;">Your Order is not successful.</h3>
                 {% endif%}
+            <br><br>
+            <center><a href={% url 'index' %}><h2 class="text-success">Go to Home</h2></a></center>
           </div>
         </div>
 
