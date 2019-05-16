@@ -29,6 +29,14 @@ CLASS = (
         ('10', '10'),
     )
 
+PR_CLASS = (
+        ('', 'select'),
+        ('7', '7'),
+        ('8', '8'),
+        ('9', '9'),
+        ('10', '10'),
+    )
+
 BOARD = (
     ('','select'),
     ('BSEB','BSEB'),
@@ -111,7 +119,7 @@ class MTSE (models.Model):
     qpl             = models.CharField(max_length = 9, choices = QPL,blank = False, null = False,verbose_name = 'Paper langauge')
     father_name     = models.CharField(verbose_name="Father Name",max_length=50, blank=False, null=True)
     mother_name     = models.CharField(verbose_name="Mother Name",max_length=50, blank=False, null=True)
-    st_class        = models.CharField(verbose_name="Std Class",choices=CLASS, max_length=2, blank=False,null = False )
+    st_class        = models.CharField(verbose_name="Class",choices=CLASS, max_length=2, blank=False,null = False )
     board           = models.CharField(verbose_name="Board",max_length = 6,choices = BOARD,blank=False)
     school          = models.CharField(verbose_name="School",max_length=50, blank=True, null=True)
     post_office     = models.CharField(verbose_name="Post Office",max_length=50, blank=True, null=True)
@@ -130,16 +138,16 @@ class MTSE (models.Model):
 class PR (models.Model):
     PR_user     = models.OneToOneField(User, on_delete = models.CASCADE)
     category    = models.CharField(verbose_name="Category",choices=P_CATEGORY, max_length=12, blank=False)
-    Full_name1  = models.CharField(verbose_name="Full Name",max_length=50, blank=False, null=True)
-    class1      = models.PositiveIntegerField(verbose_name="Class",default=4, null=True, validators=[MinValueValidator(4), MaxValueValidator(10)])
+    Full_name1  = models.CharField(verbose_name="Full Name 1",max_length=50, blank=False, null=True)
+    class1      = models.CharField(verbose_name="Class",choices=PR_CLASS, max_length=2, blank=False,null = False )
     contact_1   = models.PositiveIntegerField(verbose_name="Contact",validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)], blank=False)
     addess1     = models.CharField(verbose_name="Address",max_length=50, blank=False, null=True)
-    Full_name2  = models.CharField(verbose_name="Full Name",max_length=50, blank=False, null=True)
-    class2      = models.PositiveIntegerField(verbose_name="Class",default=4, null=True, validators=[MinValueValidator(4), MaxValueValidator(10)])
+    Full_name2  = models.CharField(verbose_name="Full Name 2",max_length=50, blank=False, null=True)
+    class2      = models.CharField(verbose_name="Class",choices=PR_CLASS, max_length=2, blank=False,null = False )
     address_2   = models.CharField(verbose_name="Address",max_length=100 , blank=False)
     contact_2   = models.PositiveIntegerField(verbose_name='Contact', validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=False, null=True)
-    Full_name3  = models.CharField(verbose_name="Full Name",max_length=50, blank=True, null=True)
-    class3      = models.PositiveIntegerField(verbose_name="Class",default=4, null=True, blank=True , validators=[MinValueValidator(4), MaxValueValidator(10)])
+    Full_name3  = models.CharField(verbose_name="Full Name 3",max_length=50, blank=True, null=True)
+    class3      = models.CharField(verbose_name="Class",choices=PR_CLASS, max_length=2, blank=False,null = False )
     address_3   = models.CharField(verbose_name="Address",max_length=100 , blank=True)
     contact_3   = models.PositiveIntegerField(verbose_name="Contact",validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)] , blank=True)
     payment         = models.BooleanField(default = False)

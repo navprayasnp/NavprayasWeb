@@ -34,11 +34,13 @@
                         </tr>
                       </thead>
                       <tbody>
+                          {% for i,j in status.items %}
                         <tr>
-                          <td>1</td>
-                          <td>MTSE</td>
-                          <td>Click here to see your filled form</td>
-                        </tr> 
+                          <td>{{forloop.counter}}</td>
+                          <td>{{i}}</td>
+                          <td><strong><span class="text-success"> {{j}}</span></strong></td>
+                        </tr>
+                          {% endfor %}
                       </tbody>
                     </table>
                 </div>
