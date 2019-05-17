@@ -80,6 +80,11 @@ P_CATEGORY = (
     ('Junior','VII/VIII'),
     ('Senior','IX/X'),
 )
+
+
+
+
+
 # ------------------------------------------------------------------------------------------------
 class Profile (models.Model):
     user            = models.OneToOneField(User,verbose_name="User", on_delete=models.CASCADE)

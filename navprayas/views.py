@@ -77,6 +77,10 @@ def status(user):
 
 
 
+    
+
+
+
 
 # *************************
 # signup form
@@ -214,7 +218,9 @@ def register(request):
         form = SignUpForm(request.POST)
         form2 = SignUpFormProfile(request.POST)
         if form.is_valid() and form2.is_valid():
-            email = form.cleaned_data['email']
+            email       = form.cleaned_data['email']
+
+            #check if username already exits
             if User.objects.filter(email = email).exists():
                 messages.warning(request, 'username already exists')
                 form = SignUpForm(request.POST)
@@ -223,14 +229,37 @@ def register(request):
                 'form2' : form2,
                 }
                 return render(request, 'navprayas/users/signup.html',context)
-            user = form.save(commit = False)
-            user.username = user.email  #username and email is same so we are not using username
+            #create user
+            password1   = form.cleaned_data['password1']
+            password2   = form.cleaned_data['password2']
+            # check if passwords are same
+            if not (password1 == password2):
+                messages.warning(request, 'Passwords do not match')
+                form = SignUpForm(request.POST)
+                context = {
+                'form' : form,
+                'form2' : form2,
+                }
+                return render(request, 'navprayas/users/signup.html',context)
+            #finally creating user with same email and username
+            user = User.objects.create_user(email,email,password1)
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
             user.save()
             a = Profile.objects.filter(user = user).first()
             a.gender = gender
             a.birth_date = birth_date
             a.save()
             return redirect('index')
+        else:
+            messages.warning(request, 'Please Enter Valid Details')
+            form = SignUpForm(request.POST)
+            context = {
+            'form' : form,
+            'form2' : form2,
+            }
+            return render(request, 'navprayas/users/signup.html',context)
+        
     else:
         form = SignUpForm()
         form2 = SignUpFormProfile()
