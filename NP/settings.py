@@ -39,11 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms',
-<<<<<<< HEAD
-    # 'simple_email_confirmation',
-=======
->>>>>>> 6151a2630592cff5f5efe3cc3c1b9e05f5c739e1
+    'crispy_forms'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
