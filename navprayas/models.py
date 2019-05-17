@@ -59,7 +59,7 @@ C_CATEGORY = (
 
 
 F_CATEGORY = (
-    ('',''),
+    ('','select'),
     ('Junior','V/VI/VII'),
     ('Senior','VIII/IX/X'),
 )

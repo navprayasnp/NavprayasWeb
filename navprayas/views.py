@@ -176,30 +176,7 @@ def pay(user_id,price,form):
 
 
 
-@login_required
-def chess_register(request):
 
-    chess_filled = chess.objects.filter(chess_user=request.user).first() #if returns none then u can fill form
-
-    if chess_filled is None:
-        if request.method == 'POST':
-            form = chess_form(request.POST)
-            if form.is_valid():
-                chess_filled = form.save(commit=False)
-                chess_filled.chess_user=request.user
-                chess_filled.save()
-                param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
-
-                return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})   
-        else:
-            form = chess_form()
-            
-    elif chess_filled.payment is False:
-        param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
-        return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
-    elif chess_filled.payment is True: #
-        return render(request, 'navprayas/home_links/submitted.html', {})
-    return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})
 
 
 @login_required
@@ -303,16 +280,25 @@ def MTSE_register(request):
                 #proceed for paymment
                 param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = MTSE_form()
+                return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})
         else:
             form = MTSE_form()
             return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})           
     elif MTSE_filled.payment is False:
         if request.method == 'POST' :
             form = MTSE_form(request.POST,instance=request.user.mtse)
+
             if form.is_valid() :
                 MTSE_filled = form.save()
                 param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = MTSE_form(instance=request.user.mtse)
+                return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})
         else:
             form = MTSE_form(instance=request.user.mtse)
             return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})
@@ -339,6 +325,11 @@ def FHS_register(request):
                 FHS_filled.save()
                 param_dict = pay(request.user.id,FHS_FEE,FHS_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = FHS_form()
+                return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})
+
         else:
             form = FHS_form() 
             return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})           
@@ -351,6 +342,10 @@ def FHS_register(request):
                 FHS_filled=form.save()
                 param_dict = pay(request.user.id,FHS_FEE,FHS_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = FHS_form(instance=request.user.fhs)
+                return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})
         else:
             form = FHS_form(instance=request.user.fhs)
             return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})
@@ -372,6 +367,10 @@ def chess_register(request):
                 chess_filled.save()
                 param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = chess_form()
+                return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})
         else:
             form = chess_form() 
             return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})           
@@ -384,6 +383,10 @@ def chess_register(request):
                 chess_filled=form.save()
                 param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = chess_form(instance = request.user.chess)
+                return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})
         else:
             form = chess_form(instance=request.user.chess)
             return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})
@@ -403,6 +406,10 @@ def PR_register(request):
                 PR_filled.save()
                 param_dict = pay(request.user.id,PR_FEE,PR_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = PR_form()
+                return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})
         else:
             form = PR_form() 
             return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})           
@@ -415,6 +422,11 @@ def PR_register(request):
                 PR_filled=form.save()
                 param_dict = pay(request.user.id,PR_FEE,PR_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = PR_form(instance=request.user.pr)
+                return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})
+
         else:
             form = PR_form(instance=request.user.pr)
             return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})

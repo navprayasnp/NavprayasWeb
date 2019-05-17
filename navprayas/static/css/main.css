@@ -1860,7 +1860,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 767px) {
   .default-header {
-    padding: 20px 15px;
+    padding: 0px 5px;
   }
 }
 
@@ -2057,7 +2057,7 @@ nav a:hover {
 
 @media (max-width: 767px) {
   .banner-content {
-    margin-top: 100px;
+    margin-top: 150px;
   }
 }
 
@@ -2212,6 +2212,7 @@ nav a:hover {
 
 .achivement-area .achivement-content h2 {
   line-height: 1.15em;
+  margin-top: 25px;
   margin-bottom: 10px;
 }
 
@@ -2615,3 +2616,8 @@ nav a:hover {
 .switch-wrap p {
   margin: 0;
 }
+
+@font-face {
+  font-family: "Algerian Regular";
+  src: url("../static/css/fonts/Algerian.ttf") format("truetype"), local('Algerian');
+  }
