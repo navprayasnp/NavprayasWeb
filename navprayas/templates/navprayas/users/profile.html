@@ -5,27 +5,77 @@
 
 <section class="section-gap achivement-area">
         <div class="container">
-          <div class="row align-items-center">
-            <div class="col-lg-10">
+          <div class="row">
+            <div class="col-lg-5">
               <div class="achivement-content">
-                    <p> Hey {{ request.user.first_name }},</p>
-                    <h2>Profile</h2>
+                    <h2>Your profile</h2>
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <fieldset class="form-group">
-                            <legend class="border-bottom mb-4">Profile Info</legend>
                             {{ u_form|crispy }}
                             {{ p_form|crispy }}
                         </fieldset>
                         <div class="form-group">
-                            <button class="btn btn-outline-info" type="submit">Update</button>
+                            <button class="btn btn-outline-info" type="button">Edit</button>
+                            <button class="btn btn-outline-info" type="submit">Save</button>
                         </div>
                     </form>
+                    </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="achivement-content">
+                  <h3>My Applications</h2>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>S. No.</th>
+                          <th>Application for</th>
+                          <th>Your response</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          {% for i,j in status.items %}
+                        <tr>
+                          <td>{{forloop.counter}}</td>
+                          <td>{{i}}</td>
+                          <td><strong><span class="text-success"> {{j}}</span></strong></td>
+                        </tr>
+                          {% endfor %}
+                      </tbody>
+                    </table>
+                </div>
               </div>
             </div>
-  
           </div>
         </div>
-      </section>
+</section>
+<!-- <section class="section-gap achivement-area">
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="col-lg-15">
+				<div class="achivement-content">
+					<h3>My Applications</h2>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>S. No.</th>
+                  <th>Application for</th>
+                  <th>Your response</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>MTSE</td>
+                  <td>Click here to see your filled form</td>
+                </tr> 
+              </tbody>
+            </table>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section> -->
 {% endblock  %}
 

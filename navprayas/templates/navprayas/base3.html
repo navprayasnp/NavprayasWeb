@@ -31,9 +31,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 	</head>
 	<body class="dup-body">
-  
 	<div id="fb-root"></div>
-        
 		<script async defer crossorigin="anonymous" src="https://connect.facebook.net/ta_IN/sdk.js#xfbml=1&version=v3.2"></script>
 		<div class="dup-body-wrap" style="background-color: white;">
             
@@ -79,8 +77,8 @@
                 </header>
                 {% endblock %}
                 <!-- endblock for header -->
+
             {% block content %}
-            
                 <!-- here will be the main contents -->
             {% endblock %}
 			<div class="modal fade" id="myModal" role="dialog">
@@ -96,7 +94,7 @@
                           <p>Please check if the information provided by you is correct. After this step, you won't be able to edit anything.</p>
                         </div>
                         <div class="modal-footer">
-                          <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="formPR.submit()">Proceed to Pay</button>
+                          <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="formPR.submit()">Submit</button>
                           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                         </div>
                       </div>
@@ -149,9 +147,7 @@
 				</div>
 			</footer>
             
-        {% endblock %}
-
-      <!-- Endblock for Footer Area -->
+        {% endblock %} <!-- Endblock for Footer Area -->
 		
         </div>
 		<script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>

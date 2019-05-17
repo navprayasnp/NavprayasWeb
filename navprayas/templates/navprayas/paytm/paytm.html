@@ -1,19 +1,33 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Paytm merchant payment page</title>
-</head>
-<body>
-<h1>Redirecting you to the merchant....</h1>
-<h1>Please do not refresh your page....</h1>
-<form action="https://securegw.paytm.in/theia/processTransaction" method="post" name="paytm">
-    {% for key, value in param_dict.items %}
-    <input type="hidden" name="{{key}}" value="{{value}}">
-    {% endfor %}
+{% extends 'navprayas/base.html' %}
+{% block title %}PSR registration{% endblock %}
 
-</form>
-</body>
-<script>
-document.paytm.submit()
-</script>
-</html>
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section class="section-gap achivement-area">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-10">
+          <div class="achivement-content">
+                <h1>Redirecting you to the merchant....</h1>
+                <h1>Please do not refresh your page....</h1>
+                <form action="https://securegw.paytm.in/theia/processTransaction" method="post" name="paytm">
+                    {% for key, value in param_dict.items %}
+                    <input type="hidden" name="{{key}}" value="{{value}}">
+                    {% endfor %}
+                
+                </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+    <script>
+        document.paytm.submit()
+    </script>
+ {% endblock %}
+
+ {% block contact %}{% endblock %}
+{% block footer %}{% endblock %}
