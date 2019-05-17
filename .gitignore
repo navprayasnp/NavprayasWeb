@@ -11,7 +11,6 @@ local_settings.py
 db.sqlite3
 media
 forgetPassword.py
-secret.py
 navprayas/migrations/*
 !__init__.py
 
