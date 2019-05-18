@@ -2,13 +2,26 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from .models import *
+from django.utils.translation import gettext, gettext_lazy as _
 
 
 # *************
 # User Signup Form
 # *************
-class SignUpForm(UserCreationForm):
-    
+class SignUpForm(forms.ModelForm):
+    password1 = forms.CharField(
+        label=_("Password"),
+        strip=False,
+        min_length = 8,
+        widget=forms.PasswordInput,
+        help_text = 'minimum 8 characters are required ',
+    )
+    password2 = forms.CharField(
+        label=_("Password confirmation"),
+        widget=forms.PasswordInput,
+        strip=False,
+        help_text=_("Enter the same password as before, for verification."),
+    )
     class Meta:
         model = User
         fields = ( 'first_name', 'last_name', 'email', 'password1', 'password2',)
@@ -19,7 +32,8 @@ class SignUpForm(UserCreationForm):
 # *************
 class SignUpFormProfile(forms.ModelForm):
     birth_date = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={'placeholder': 'yyyy-mm-dd'}),
+        help_text=_("year-month-day"),
+        widget=forms.DateTimeInput(attrs={'placeholder': 'yyyy-mm-dd'},),
         )
     class Meta:
         model = Profile
@@ -30,12 +44,6 @@ class SignUpFormProfile(forms.ModelForm):
 # 
 #  
 
-class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField()
-
-    class Meta:
-        model = User
-        fields = ['username', 'email']
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
