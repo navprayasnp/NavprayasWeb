@@ -1,4 +1,4 @@
-
+﻿
 # Created by https://www.gitignore.io/api/django
 # Edit at https://www.gitignore.io/?templates=django
 
@@ -6,12 +6,10 @@
 *.log
 *.pot
 *.pyc
-__pycache__/
 local_settings.py
 db.sqlite3
 media
 forgetPassword.py
-navprayas/migrations/*
 !__init__.py
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
