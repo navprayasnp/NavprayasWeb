@@ -189,7 +189,7 @@ def pay(user_id,price,form):
             'INDUSTRY_TYPE_ID': 'Retail',
             'WEBSITE': 'DEFAULT',
             'CHANNEL_ID': 'WEB',
-            'CALLBACK_URL':'http://127.0.0.1:8000/handlerequest/',
+            'CALLBACK_URL':'http://www.navprayas.in/handlerequest/',
             'INDUSTRY_TYPE_ID' : 'Retail',
             'CHANNEL_ID' : 'WEB',
 
