@@ -9,6 +9,10 @@ from django.utils.translation import gettext, gettext_lazy as _
 # User Signup Form
 # *************
 class SignUpForm(forms.ModelForm):
+    first_name = forms.CharField(max_length = 20,required = True)
+    last_name = forms.CharField(max_length = 20,required = True)
+
+
     password1 = forms.CharField(
         label=_("Password"),
         strip=False,
@@ -21,6 +25,10 @@ class SignUpForm(forms.ModelForm):
         widget=forms.PasswordInput,
         strip=False,
         help_text=_("Enter the same password as before, for verification."),
+    )
+    email  = forms.EmailField(
+        required=True,
+        help_text="Enter the corrrect Email\n",
     )
     class Meta:
         model = User
