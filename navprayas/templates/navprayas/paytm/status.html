@@ -10,12 +10,14 @@
       <div class="row align-items-center">
         <div class="col-lg-10">
           <div class="achivement-content">
+                <h2 style="text-align: center;">You are redirecting..........Please Wait</h2><br>
                 <h2 style="text-align: center;">Payment status regarding your order Id {{response.ORDERID}}</h2><br>
                 {% if response.RESPCODE == '01' %}
                 <h3 style="text-align: center;">Your Order is successful.</h3>
                 {% else %}
                 <h3 style="text-align: center;">Your Order is not successful.</h3>
                 {% endif%}
+                You are redirecting..........
             <br><br>
             <center><a href={% url 'index' %}><h2 class="text-success">Go to Home</h2></a></center>
           </div>
@@ -24,6 +26,11 @@
       </div>
     </div>
   </section>
+  <script>
+    var timer = setTimeout(function() {
+        window.location='http://127.0.0.1:8000/profile'
+    }, 2500);
+</script>
 
     <script>
         document.paytm.submit()

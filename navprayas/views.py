@@ -52,28 +52,52 @@ def status(user):
     status_dict ={}
     rangotsav1 = rangotsav.objects.filter(rangotsav_user_id = user.id ).first()
     if rangotsav1 is not None   :
-        status_dict['RANGOTSAV'] = 'SUCCESSFUL'
+        status_dict['RANGOTSAV'] = '<span class="text-success">SUCCESSFUL</span>'
+    else :
+        status_dict['RANGOTSAV'] = "<a href = '/rangotsav_register/'><b> Click Here </b></a> to register"
     fhs1 = FHS.objects.filter(FHS_user_id = user.id ).first()
     if fhs1 is not None   :
         if fhs1.payment :
-            status_dict['FHS'] ='SUCCESSFUL'
+            status_dict['FREE HAND SKETCHING'] ='<span class="text-success">SUCCESSFUL </span> '+str(fhs1.order_id)
+        else :
+            status_dict['FREE HAND SKETCHING'] = "<a href = '/FHS_register/'> <b>Click Here</b> </a> to pay"
+    else :
+        status_dict['FREE HAND SKETCHING'] = "<a href = '/FHS_register/'><b>Click Here </b></a> to register"
     pr1 = PR.objects.filter(PR_user_id = user.id ).first()
     if pr1 is not None   :
         if pr1.payment :
-            status_dict['PUZZLE RACE'] = 'SUCCESSFUL'
+            status_dict['PUZZLE RACE'] = '<span class="text-success">SUCCESSFUL </span> ' +str(pr1.order_id) 
+        else :
+            status_dict['PUZZLE RACE'] = "<a href = '/PR_register/'> <b>Click Here </b></a> to pay"
+    else :
+        status_dict['PUZZLE RACE'] = "<a href = '/PR_register/'> <b>Click Here </b></a> to register"
     mtse1 = MTSE.objects.filter(MTSE_user_id = user.id ).first()
     if mtse1 is not None   :
         if mtse1.payment :
-            status_dict['MTSE'] ='SUCCESSFUL'
+            status_dict['MTSE'] ='<span class="text-success">SUCCESSFUL</span> '+ str(mtse1.order_id)
+        else :
+            status_dict['MTSE'] = "<a href = '/MTSE_register/'> <b>Click Here </b></a> to pay"
+    else :
+        status_dict['MTSE'] = "<a href = '/MTSE_register/'> <b>Click Here </b></a> to register"
     chess1 = chess.objects.filter(chess_user_id = user.id ).first()
     if chess1 is not None   :
         if chess1.payment :
-            status_dict['CHESS'] = 'SUCCESSFUL'
+            status_dict['CHESS'] = '<span class="text-success">SUCCESSFUL </span> '+str(chess1.order_id)
+        else :
+            status_dict['CHESS'] = "<a href = '/chess_register/'> <b>Click Here </b></a> to pay"
+    else :
+        status_dict['CHESS'] = "<a href = '/chess_register/'> <b>Click Here </b></a> to register"
     spr1 = SPR.objects.filter(SPR_user_id = user.id ).first()
     if spr1 is not None   :
-        status_dict['P & S WRITIING'] = 'SUCCESSFUL'
+        status_dict['POEM & STORY WRITIING'] = '<span class="text-success">SUCCESSFUL</span>'
+    else :
+        status_dict['POEM & STORY WRITIING'] = "<a href = '/SPR_register/'> <b>Click Here </b></a> to register"
     return status_dict
 
+
+
+
+    
 
 
 
@@ -176,49 +200,22 @@ def pay(user_id,price,form):
 
 
 
-@login_required
-def chess_register(request):
 
-    chess_filled = chess.objects.filter(chess_user=request.user).first() #if returns none then u can fill form
-
-    if chess_filled is None:
-        if request.method == 'POST':
-            form = chess_form(request.POST)
-            if form.is_valid():
-                chess_filled = form.save(commit=False)
-                chess_filled.chess_user=request.user
-                chess_filled.save()
-                param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
-
-                return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})   
-        else:
-            form = chess_form()
-            
-    elif chess_filled.payment is False:
-        param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
-        return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
-    elif chess_filled.payment is True: #
-        return render(request, 'navprayas/home_links/submitted.html', {})
-    return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})
 
 
 @login_required
 def profile(request):
     statuses=status(request.user)
     if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST,instance=request.user.profile)
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
+        if p_form.is_valid():
             p_form.save()
             return redirect('profile')
 
     else:
-        u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
 
     context = {
-        'u_form': u_form,
         'p_form': p_form,
         'status': statuses,
     }
@@ -237,7 +234,9 @@ def register(request):
         form = SignUpForm(request.POST)
         form2 = SignUpFormProfile(request.POST)
         if form.is_valid() and form2.is_valid():
-            email = form.cleaned_data['email']
+            email       = form.cleaned_data['email']
+
+            #check if username already exits
             if User.objects.filter(email = email).exists():
                 messages.warning(request, 'username already exists')
                 form = SignUpForm(request.POST)
@@ -246,14 +245,37 @@ def register(request):
                 'form2' : form2,
                 }
                 return render(request, 'navprayas/users/signup.html',context)
-            user = form.save(commit = False)
-            user.username = user.email  #username and email is same so we are not using username
+            #create user
+            password1   = form.cleaned_data['password1']
+            password2   = form.cleaned_data['password2']
+            # check if passwords are same
+            if not (password1 == password2):
+                messages.warning(request, 'Passwords do not match')
+                form = SignUpForm(request.POST)
+                context = {
+                'form' : form,
+                'form2' : form2,
+                }
+                return render(request, 'navprayas/users/signup.html',context)
+            #finally creating user with same email and username
+            user = User.objects.create_user(email,email,password1)
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
             user.save()
             a = Profile.objects.filter(user = user).first()
             a.gender = gender
             a.birth_date = birth_date
             a.save()
             return redirect('index')
+        else:
+            messages.warning(request, 'Please Enter Valid Details')
+            form = SignUpForm(request.POST)
+            context = {
+            'form' : form,
+            'form2' : form2,
+            }
+            return render(request, 'navprayas/users/signup.html',context)
+        
     else:
         form = SignUpForm()
         form2 = SignUpFormProfile()
@@ -303,16 +325,25 @@ def MTSE_register(request):
                 #proceed for paymment
                 param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = MTSE_form(request.POST)
+                return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})
         else:
             form = MTSE_form()
             return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})           
     elif MTSE_filled.payment is False:
         if request.method == 'POST' :
             form = MTSE_form(request.POST,instance=request.user.mtse)
+
             if form.is_valid() :
                 MTSE_filled = form.save()
                 param_dict = pay(request.user.id,MTSE_FEE,MTSE_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = MTSE_form(instance=request.user.mtse)
+                return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})
         else:
             form = MTSE_form(instance=request.user.mtse)
             return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})
@@ -339,6 +370,11 @@ def FHS_register(request):
                 FHS_filled.save()
                 param_dict = pay(request.user.id,FHS_FEE,FHS_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = FHS_form(request.POST)
+                return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})
+
         else:
             form = FHS_form() 
             return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})           
@@ -351,6 +387,10 @@ def FHS_register(request):
                 FHS_filled=form.save()
                 param_dict = pay(request.user.id,FHS_FEE,FHS_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = FHS_form(instance=request.user.fhs)
+                return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})
         else:
             form = FHS_form(instance=request.user.fhs)
             return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})
@@ -372,6 +412,10 @@ def chess_register(request):
                 chess_filled.save()
                 param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = chess_form(request.POST)
+                return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})
         else:
             form = chess_form() 
             return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})           
@@ -384,6 +428,10 @@ def chess_register(request):
                 chess_filled=form.save()
                 param_dict = pay(request.user.id,CHESS_FEE,chess_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = chess_form(instance = request.user.chess)
+                return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})
         else:
             form = chess_form(instance=request.user.chess)
             return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})
@@ -403,6 +451,10 @@ def PR_register(request):
                 PR_filled.save()
                 param_dict = pay(request.user.id,PR_FEE,PR_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = PR_form(request.POST)
+                return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})
         else:
             form = PR_form() 
             return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})           
@@ -415,6 +467,11 @@ def PR_register(request):
                 PR_filled=form.save()
                 param_dict = pay(request.user.id,PR_FEE,PR_filled)
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
+            else:
+                messages.warning(request, 'Please enter valid details')
+                form = PR_form(instance=request.user.pr)
+                return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})
+
         else:
             form = PR_form(instance=request.user.pr)
             return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})
