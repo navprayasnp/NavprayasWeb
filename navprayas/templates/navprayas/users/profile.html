@@ -9,10 +9,12 @@
             <div class="col-lg-5">
               <div class="achivement-content">
                     <h2>Your profile</h2>
-                    <form method="POST" enctype="multipart/form-data">
+                    <hr>
+                    <p>  Email : <b>{{ request.user.email }} </b>(Contact Office For Update) </p>
+                    <hr>
+                    <form method="POST" >
                         {% csrf_token %}
                         <fieldset class="form-group">
-                            {{ u_form|crispy }}
                             {{ p_form|crispy }}
                         </fieldset>
                         <div class="form-group">
@@ -38,7 +40,7 @@
                         <tr>
                           <td>{{forloop.counter}}</td>
                           <td>{{i}}</td>
-                          <td><strong><span class="text-success"> {{j}}</span></strong></td>
+                          <td><strong> {{j|safe}}</strong></td>
                         </tr>
                           {% endfor %}
                       </tbody>
