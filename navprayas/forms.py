@@ -12,14 +12,15 @@ class SignUpForm(forms.ModelForm):
     password1 = forms.CharField(
         label=_("Password"),
         strip=False,
+        min_length = 8,
         widget=forms.PasswordInput,
-        # help_text=password_validation.password_validators_help_text_html(),
+        help_text = 'minimum 8 characters are required ',
     )
     password2 = forms.CharField(
         label=_("Password confirmation"),
         widget=forms.PasswordInput,
         strip=False,
-        # help_text=_("Enter the same password as before, for verification."),
+        help_text=_("Enter the same password as before, for verification."),
     )
     class Meta:
         model = User
@@ -31,7 +32,8 @@ class SignUpForm(forms.ModelForm):
 # *************
 class SignUpFormProfile(forms.ModelForm):
     birth_date = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={'placeholder': 'yyyy-mm-dd'}),
+        help_text=_("year-month-day"),
+        widget=forms.DateTimeInput(attrs={'placeholder': 'yyyy-mm-dd'},),
         )
     class Meta:
         model = Profile
