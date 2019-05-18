@@ -27,7 +27,7 @@ SECRET_KEY = Secret.PROJECT_SECRET_KEY
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '192.168.43.186',
+    '192.168.43.186','www.navprayas.in','navprayas.in','127.0.0.1','localhost','0.0.0.0'
 ]
 
 
