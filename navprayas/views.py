@@ -52,26 +52,46 @@ def status(user):
     status_dict ={}
     rangotsav1 = rangotsav.objects.filter(rangotsav_user_id = user.id ).first()
     if rangotsav1 is not None   :
-        status_dict['RANGOTSAV'] = 'SUCCESSFUL'
+        status_dict['RANGOTSAV'] = '<span class="text-success">SUCCESSFUL</span>'
+    else :
+        status_dict['RANGOTSAV'] = "<a href = '/rangotsav_register/'><b> Click Here </b></a> to register"
     fhs1 = FHS.objects.filter(FHS_user_id = user.id ).first()
     if fhs1 is not None   :
         if fhs1.payment :
-            status_dict['FHS'] ='SUCCESSFUL'
+            status_dict['FREE HAND SKETCHING'] ='<span class="text-success">SUCCESSFUL </span> '+str(fhs1.order_id)
+        else :
+            status_dict['FREE HAND SKETCHING'] = "<a href = '/FHS_register/'> <b>Click Here</b> </a> to pay"
+    else :
+        status_dict['FREE HAND SKETCHING'] = "<a href = '/FHS_register/'><b>Click Here </b></a> to register"
     pr1 = PR.objects.filter(PR_user_id = user.id ).first()
     if pr1 is not None   :
         if pr1.payment :
-            status_dict['PUZZLE RACE'] = 'SUCCESSFUL'
+            status_dict['PUZZLE RACE'] = '<span class="text-success">SUCCESSFUL </span> ' +str(pr1.order_id) 
+        else :
+            status_dict['PUZZLE RACE'] = "<a href = '/PR_register/'> <b>Click Here </b></a> to pay"
+    else :
+        status_dict['PUZZLE RACE'] = "<a href = '/PR_register/'> <b>Click Here </b></a> to register"
     mtse1 = MTSE.objects.filter(MTSE_user_id = user.id ).first()
     if mtse1 is not None   :
         if mtse1.payment :
-            status_dict['MTSE'] ='SUCCESSFUL'
+            status_dict['MTSE'] ='<span class="text-success">SUCCESSFUL</span> '+ str(mtse1.order_id)
+        else :
+            status_dict['MTSE'] = "<a href = '/MTSE_register/'> <b>Click Here </b></a> to pay"
+    else :
+        status_dict['MTSE'] = "<a href = '/MTSE_register/'> <b>Click Here </b></a> to register"
     chess1 = chess.objects.filter(chess_user_id = user.id ).first()
     if chess1 is not None   :
         if chess1.payment :
-            status_dict['CHESS'] = 'SUCCESSFUL'
+            status_dict['CHESS'] = '<span class="text-success">SUCCESSFUL </span> '+str(chess1.order_id)
+        else :
+            status_dict['CHESS'] = "<a href = '/chess_register/'> <b>Click Here </b></a> to pay"
+    else :
+        status_dict['CHESS'] = "<a href = '/chess_register/'> <b>Click Here </b></a> to register"
     spr1 = SPR.objects.filter(SPR_user_id = user.id ).first()
     if spr1 is not None   :
-        status_dict['P & S WRITIING'] = 'SUCCESSFUL'
+        status_dict['POEM & STORY WRITIING'] = '<span class="text-success">SUCCESSFUL</span>'
+    else :
+        status_dict['POEM & STORY WRITIING'] = "<a href = '/SPR_register/'> <b>Click Here </b></a> to register"
     return status_dict
 
 
@@ -187,19 +207,15 @@ def pay(user_id,price,form):
 def profile(request):
     statuses=status(request.user)
     if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST,instance=request.user.profile)
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
+        if p_form.is_valid():
             p_form.save()
             return redirect('profile')
 
     else:
-        u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
 
     context = {
-        'u_form': u_form,
         'p_form': p_form,
         'status': statuses,
     }
@@ -311,7 +327,7 @@ def MTSE_register(request):
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
             else:
                 messages.warning(request, 'Please enter valid details')
-                form = MTSE_form()
+                form = MTSE_form(request.POST)
                 return render(request, 'navprayas/exam_forms/MTSE_register.html', {'form': form})
         else:
             form = MTSE_form()
@@ -356,7 +372,7 @@ def FHS_register(request):
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
             else:
                 messages.warning(request, 'Please enter valid details')
-                form = FHS_form()
+                form = FHS_form(request.POST)
                 return render(request, 'navprayas/exam_forms/FHS_register.html', {'form': form})
 
         else:
@@ -398,7 +414,7 @@ def chess_register(request):
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
             else:
                 messages.warning(request, 'Please enter valid details')
-                form = chess_form()
+                form = chess_form(request.POST)
                 return render(request, 'navprayas/exam_forms/chess_register.html', {'form': form})
         else:
             form = chess_form() 
@@ -437,7 +453,7 @@ def PR_register(request):
                 return render(request, 'navprayas/paytm/paytm.html', {'param_dict': param_dict})
             else:
                 messages.warning(request, 'Please enter valid details')
-                form = PR_form()
+                form = PR_form(request.POST)
                 return render(request, 'navprayas/exam_forms/PR_register.html', {'form': form})
         else:
             form = PR_form() 
