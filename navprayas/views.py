@@ -274,7 +274,7 @@ def register(request):
             a.save()
             sub = "Successful signup"
             mgs = "Your account has been created successfully."
-            send_mail(sub, mgs, np_email, [email])
+            send_mail(sub, mgs, email, [email])
             messages.success(request, 'Your account is created successfully | SignIn Now !!!')
             return redirect('login')
         else:
