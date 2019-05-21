@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login   #as it clashes with other login term
+from .functions import *
 
 
 from .forms import * #all the components from .form
@@ -12,6 +13,8 @@ from navprayas import checksum as Checksum
 from django.contrib import messages
 from django.core.mail import send_mail
 #from django.contrib.auth.models import User
+
+    
 
 
 
@@ -48,21 +51,45 @@ def notifications(request):
 def team(request):
     return render(request, 'navprayas/home_links/team.html', {})
 
+
+
+def pay(user_id,price,form):
+    oid = 'O19'+OID()
+    form.order_id = oid
+    form.save() 
+    
+
+    param_dict = {
+            'MID': Secret.PAYMENT_MERCHANT_ID,
+            'ORDER_ID': oid,
+            'TXN_AMOUNT': price,
+            'CUST_ID': str(user_id),
+            'INDUSTRY_TYPE_ID': 'Retail',
+            'WEBSITE': 'DEFAULT',
+            'CHANNEL_ID': 'WEB',
+            'CALLBACK_URL':'http://www.navprayas.in/handlerequest/',
+            'INDUSTRY_TYPE_ID' : 'Retail',
+            'CHANNEL_ID' : 'WEB',
+
+            }
+    param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
+    return param_dict
+
 def status(user):
     status_dict ={}
-    rangotsav1 = rangotsav.objects.filter(rangotsav_user_id = user.id ).first()
-    if rangotsav1 is not None   :
-        status_dict['RANGOTSAV'] = '<span class="text-success">SUCCESSFUL</span>'
-    else :
-        status_dict['RANGOTSAV'] = "<a href = '/rangotsav_register/'><b> Click Here </b></a> to register"
-    fhs1 = FHS.objects.filter(FHS_user_id = user.id ).first()
-    if fhs1 is not None   :
-        if fhs1.payment :
-            status_dict['FREE HAND SKETCHING'] ='<span class="text-success">SUCCESSFUL </span> '+str(fhs1.order_id)
-        else :
-            status_dict['FREE HAND SKETCHING'] = "<a href = '/FHS_register/'> <b>Click Here</b> </a> to pay"
-    else :
-        status_dict['FREE HAND SKETCHING'] = "<a href = '/FHS_register/'><b>Click Here </b></a> to register"
+    # rangotsav1 = rangotsav.objects.filter(rangotsav_user_id = user.id ).first()
+    # if rangotsav1 is not None   :
+    #     status_dict['RANGOTSAV'] = '<span class="text-success">SUCCESSFUL</span>'
+    # else :
+    #     status_dict['RANGOTSAV'] = "<a href = '/rangotsav_register/'><b> Click Here </b></a> to register"
+    # fhs1 = FHS.objects.filter(FHS_user_id = user.id ).first()
+    # if fhs1 is not None   :
+    #     if fhs1.payment :
+    #         status_dict['FREE HAND SKETCHING'] ='<span class="text-success">SUCCESSFUL </span> '+str(fhs1.order_id)
+    #     else :
+    #         status_dict['FREE HAND SKETCHING'] = "<a href = '/FHS_register/'> <b>Click Here</b> </a> to pay"
+    # else :
+    #     status_dict['FREE HAND SKETCHING'] = "<a href = '/FHS_register/'><b>Click Here </b></a> to register"
     pr1 = PR.objects.filter(PR_user_id = user.id ).first()
     if pr1 is not None   :
         if pr1.payment :
@@ -87,16 +114,12 @@ def status(user):
             status_dict['CHESS'] = "<a href = '/chess_register/'> <b>Click Here </b></a> to pay"
     else :
         status_dict['CHESS'] = "<a href = '/chess_register/'> <b>Click Here </b></a> to register"
-    spr1 = SPR.objects.filter(SPR_user_id = user.id ).first()
-    if spr1 is not None   :
-        status_dict['POEM & STORY WRITIING'] = '<span class="text-success">SUCCESSFUL</span>'
-    else :
-        status_dict['POEM & STORY WRITIING'] = "<a href = '/SPR_register/'> <b>Click Here </b></a> to register"
+    # spr1 = SPR.objects.filter(SPR_user_id = user.id ).first()
+    # if spr1 is not None   :
+    #     status_dict['POEM & STORY WRITIING'] = '<span class="text-success">SUCCESSFUL</span>'
+    # else :
+    #     status_dict['POEM & STORY WRITIING'] = "<a href = '/SPR_register/'> <b>Click Here </b></a> to register"
     return status_dict
-
-
-
-
     
 
 
@@ -144,16 +167,16 @@ def handlerequest(request):
                     mgs = "You  have succesfullly registered for PUZZLE RACE.\n Your application ID is " + str(oid) + ".\n\n\n\n\n\n\n\n" + "NAVPRAYAS OFFICE\n 1st floor Durga Asthan Market \nManpur Patwatoli Gaya,PIN-823003\nBihar, India"
                     send_mail(sub, mgs, np_email, [email])
 
-                fhs = FHS.objects.filter(order_id = oid).first()
-                if fhs is not None:
-                    fhs.payment = True
-                    fhs.txn_date = txndate
-                    fhs.save()
-                    email=fhs.FHS_user.email
-                    print(oid)
-                    sub="Confirmation for your registration"
-                    mgs="You  have succesfullly registered for FREE HAND SKETCHING  .\n Your application ID is " + str(oid) + ".\n\n\n\n\n\n\n\n" + "NAVPRAYAS OFFICE\n 1st floor Durga Asthan Market \nManpur Patwatoli Gaya,PIN-823003\nBihar, India"
-                    send_mail(sub, mgs, np_email, [email])
+                # fhs = FHS.objects.filter(order_id = oid).first()
+                # if fhs is not None:
+                #     fhs.payment = True
+                #     fhs.txn_date = txndate
+                #     fhs.save()
+                #     email=fhs.FHS_user.email
+                #     print(oid)
+                #     sub="Confirmation for your registration"
+                #     mgs="You  have succesfullly registered for FREE HAND SKETCHING  .\n Your application ID is " + str(oid) + ".\n\n\n\n\n\n\n\n" + "NAVPRAYAS OFFICE\n 1st floor Durga Asthan Market \nManpur Patwatoli Gaya,PIN-823003\nBihar, India"
+                #     send_mail(sub, mgs, np_email, [email])
 
                 ches = chess.objects.filter(order_id = oid).first()
                 if ches is not None:    # please donot rectify ches
@@ -167,35 +190,12 @@ def handlerequest(request):
 
 
 
-
-
             else:
                 print('order was not successful because' + response_dict['RESPMSG'])
         return render(request, 'navprayas/paytm/status.html', {'response': response_dict})
     return redirect('index')
 
 
-def pay(user_id,price,form):
-    oid = 'O19'+OID()
-    form.order_id = oid
-    form.save() 
-    
-
-    param_dict = {
-            'MID': Secret.PAYMENT_MERCHANT_ID,
-            'ORDER_ID': oid,
-            'TXN_AMOUNT': price,
-            'CUST_ID': str(user_id),
-            'INDUSTRY_TYPE_ID': 'Retail',
-            'WEBSITE': 'DEFAULT',
-            'CHANNEL_ID': 'WEB',
-            'CALLBACK_URL':'http://www.navprayas.in/handlerequest/',
-            'INDUSTRY_TYPE_ID' : 'Retail',
-            'CHANNEL_ID' : 'WEB',
-
-            }
-    param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
-    return param_dict
 
 
 
@@ -203,8 +203,12 @@ def pay(user_id,price,form):
 
 
 
-@login_required
+
+
 def profile(request):
+    if not request.user.is_authenticated :
+        messages.info(request,'Please login first to proceed')
+        return redirect('login')
     statuses=status(request.user)
     if request.method == 'POST':
         p_form = ProfileUpdateForm(request.POST,instance=request.user.profile)
@@ -238,7 +242,7 @@ def register(request):
 
             #check if username already exits
             if User.objects.filter(email = email).exists():
-                messages.warning(request, 'username already exists')
+                messages.warning(request, 'Email already exists !!!')
                 form = SignUpForm(request.POST)
                 context = {
                 'form' : form,
@@ -248,9 +252,10 @@ def register(request):
             #create user
             password1   = form.cleaned_data['password1']
             password2   = form.cleaned_data['password2']
+            
             # check if passwords are same
             if not (password1 == password2):
-                messages.warning(request, 'Passwords do not match')
+                messages.warning(request, 'Passwords do not match !!!')
                 form = SignUpForm(request.POST)
                 context = {
                 'form' : form,
@@ -259,14 +264,19 @@ def register(request):
                 return render(request, 'navprayas/users/signup.html',context)
             #finally creating user with same email and username
             user = User.objects.create_user(email,email,password1)
-            user.first_name = form.cleaned_data['first_name']
+            user.first_name = form.cleaned_data['first_name']   
             user.last_name = form.cleaned_data['last_name']
+
             user.save()
             a = Profile.objects.filter(user = user).first()
             a.gender = gender
             a.birth_date = birth_date
             a.save()
-            return redirect('index')
+            sub = "Successful signup"
+            mgs = "Your account has been created successfully."
+            send_mail(sub, mgs, np_email, [email])
+            messages.success(request, 'Your account is created successfully | SignIn Now !!!')
+            return redirect('login')
         else:
             messages.warning(request, 'Please Enter Valid Details')
             form = SignUpForm(request.POST)
@@ -311,8 +321,10 @@ def register(request):
 # MTSE
 # *************************
 
-@login_required
 def MTSE_register(request):
+    if not request.user.is_authenticated :
+        messages.info(request,'Please login first to proceed')
+        return redirect('login')
     MTSE_filled = MTSE.objects.filter(MTSE_user=request.user).first() #if returns none then u can fill form
     if MTSE_filled is None: #if form is filled
         if request.method == 'POST':
@@ -357,8 +369,13 @@ def MTSE_register(request):
 # *************************
 # FHS
 # *************************
-@login_required
+
+
 def FHS_register(request):
+    return redirect('index')
+    if not request.user.is_authenticated :
+            messages.info(request,'Please login first to proceed')
+            return redirect('login')    
     FHS_filled = FHS.objects.filter(FHS_user=request.user).first() #if returns none then u can fill form
 
     if FHS_filled is None:
@@ -399,8 +416,10 @@ def FHS_register(request):
 
 
 
-@login_required
 def chess_register(request):
+    if not request.user.is_authenticated :
+        messages.info(request,'Please login first to proceed')
+        return redirect('login')
     chess_filled = chess.objects.filter(chess_user=request.user).first() #if returns none then u can fill form
 
     if chess_filled is None:
@@ -438,8 +457,11 @@ def chess_register(request):
     else:
         return render(request, 'navprayas/home_links/submitted.html', {})
 
-@login_required
+
 def PR_register(request):
+    if not request.user.is_authenticated :
+        messages.info(request,'Please login first to proceed')
+        return redirect('login')
     PR_filled = PR.objects.filter(PR_user=request.user).first() #if returns none then u can fill form
 
     if PR_filled is None:
@@ -480,8 +502,11 @@ def PR_register(request):
 # *************************
 # rangotsav
 # *************************
-@login_required
 def rangotsav_register(request):
+    return redirect('index')
+    if not request.user.is_authenticated :
+        messages.info(request,'Please login first to proceed')
+        return redirect('login')
     rangotsav_filled = rangotsav.objects.filter(rangotsav_user=request.user).first() #if returns none then u can fill form
     if rangotsav_filled is None:
         if request.method == 'POST':
@@ -504,9 +529,11 @@ def rangotsav_register(request):
 # *************************
 # SPR
 # *************************
-@login_required
 def SPR_register(request):
-
+    return redirect('index')
+    if not request.user.is_authenticated :
+        messages.info(request,'Please login first to proceed')
+        return redirect('login')
     SPR_filled = SPR.objects.filter(SPR_user=request.user).first() #if returns none then u can fill form
 
     if SPR_filled is None:
@@ -531,4 +558,7 @@ def SPR_register(request):
 # *************************
 
 
+
+        
+        
 
