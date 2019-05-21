@@ -54,6 +54,10 @@ class SignUpFormProfile(forms.ModelForm):
 
 
 class ProfileUpdateForm(forms.ModelForm):
+    birth_date = forms.DateTimeField(
+        help_text=_("year-month-day"),
+        widget=forms.DateTimeInput(attrs={'placeholder': 'yyyy-mm-dd'},),
+        )
     class Meta:
         model = Profile
         fields = [
@@ -111,7 +115,7 @@ class PR_form(forms.ModelForm):
     class Meta:
         model = PR
         fields = (
-            'category',
+            # 'category',
             'Full_name1',
             'class1',
             'contact_1',
@@ -130,6 +134,10 @@ class PR_form(forms.ModelForm):
 # MTSE Form
 # *************
 class MTSE_form(forms.ModelForm):
+    birth_date = forms.DateTimeField(
+        help_text=_("year-month-day"),
+        widget=forms.DateTimeInput(attrs={'placeholder': 'yyyy-mm-dd'},),
+        )
     class Meta:
         model = MTSE
         fields = (
@@ -147,6 +155,7 @@ class MTSE_form(forms.ModelForm):
             'ditrict',
             'city',
             'pin',
+            'contact',
             'Home_number',
         )
 

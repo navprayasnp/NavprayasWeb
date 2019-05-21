@@ -83,4 +83,42 @@
     <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
 </body>
-</html>
+</html>{% extends 'navprayas/base.html' %}
+{% block title %}FHS registration{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section class="section-gap achivement-area">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-10">
+          <div class="achivement-content">
+            <h3>Free Hand Sketching</h3>
+            <p><a href="/events#fhs"><b> Cick here</b> </a>to know more about this event.</p>
+              <form method="post" id="formPR">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}  alert-dismissible fade show" role = "alert">
+                        {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                  {% csrf_token %}
+                  {{form|crispy}}
+                  <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#myModal">Submit</button>
+                </form> 
+                <br><br><br><b>Note :</b><br>
+                <p class="text-muted">* marked are all mandatory fields <br>
+                  Please confirm before submit
+              </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+ {% endblock %}
+
+ {% block contact %}{% endblock %}
+{% block footer %}{% endblock %}
