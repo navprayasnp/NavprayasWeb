@@ -91,7 +91,7 @@ class Profile (models.Model):
     city            = models.CharField(verbose_name="City", max_length=50, blank=True, null=True)
     mother_name     = models.CharField(verbose_name="Mother Name",max_length=50, blank=True, null=True)
     father_name     = models.CharField(verbose_name="Father Name",max_length=50, blank=True, null=True)
-    class_study     = models.PositiveIntegerField(verbose_name="Class",choices=CLASS, blank=True,null = True )
+    class_study     = models.CharField(verbose_name="Class",max_length = 2,choices=CLASS, blank=True,null = True )
     post_office     = models.CharField(verbose_name="Post Office", max_length=50, blank=True, null=True)
     gender          = models.CharField(verbose_name="Gender", default = 'Male', max_length=50, blank=True, null=False,choices = GENDER)
     addess          = models.CharField(verbose_name="Address", max_length=100, blank=True, null=True)
