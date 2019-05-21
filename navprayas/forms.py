@@ -39,9 +39,9 @@ class SignUpForm(forms.ModelForm):
 # Profile Signup Form
 # *************
 class SignUpFormProfile(forms.ModelForm):
-    birth_date = forms.DateTimeField(
+    birth_date = forms.DateField(
         help_text=_("year-month-day"),
-        widget=forms.DateTimeInput(attrs={'placeholder': 'yyyy-mm-dd'},),
+        widget=forms.DateInput(attrs={'placeholder': 'yyyy-mm-dd'},),
         )
     class Meta:
         model = Profile
@@ -54,9 +54,9 @@ class SignUpFormProfile(forms.ModelForm):
 
 
 class ProfileUpdateForm(forms.ModelForm):
-    birth_date = forms.DateTimeField(
+    birth_date = forms.DateField(
         help_text=_("year-month-day"),
-        widget=forms.DateTimeInput(attrs={'placeholder': 'yyyy-mm-dd'},),
+        widget=forms.DateInput(attrs={'placeholder': 'yyyy-mm-dd'},),
         )
     class Meta:
         model = Profile
@@ -134,9 +134,9 @@ class PR_form(forms.ModelForm):
 # MTSE Form
 # *************
 class MTSE_form(forms.ModelForm):
-    birth_date = forms.DateTimeField(
+    birth_date = forms.DateField(
         help_text=_("year-month-day"),
-        widget=forms.DateTimeInput(attrs={'placeholder': 'yyyy-mm-dd'},),
+        widget=forms.DateInput(attrs={'placeholder': 'yyyy-mm-dd'},),
         )
     class Meta:
         model = MTSE
