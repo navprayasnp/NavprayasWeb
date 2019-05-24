@@ -60,4 +60,5 @@ urlpatterns = [
     # path("payment/", views.payment, name="payment"),
     path("handlerequest/", views.handlerequest, name="handlerequest"),
 
+    path('profile/admit-card/', views.getAdmitCard, name='getAdmitCard')
 ]

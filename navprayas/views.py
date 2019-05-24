@@ -32,6 +32,11 @@ FHS_FEE     = '10'
 PR_FEE      = '40'
 # _FEE
 
+from django.views.generic import View
+from django.utils import timezone
+from .models import *
+from .render import Render
+
 # Create your views here.
 def index(request):
     return render(request, 'navprayas/home_links/index.html', {})
@@ -559,6 +564,15 @@ def SPR_register(request):
 
 
 
-        
-        
-
+# *************************
+# Admit Card
+# *************************
+def getAdmitCard(request):
+    users = Profile.objects.all()
+    today = timezone.now()
+    params = {
+        'today': today,
+        'users': users,
+        'request': request
+    }
+    return Render.render('navprayas/doc/getAdmitCard.html', params)
